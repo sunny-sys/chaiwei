@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.LogisticsInfoMapper">
+    
+    <resultMap type="LogisticsInfo" id="LogisticsInfoResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="address"    column="address"    />
+        <result property="linkman"    column="linkman"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="phoneNumber"    column="phone_number"    />
+        <result property="facsimile"    column="facsimile"    />
+        <result property="email"    column="email"    />
+        <result property="postcode"    column="postcode"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="website"    column="website"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="updateTime"    />
+    </resultMap>
+	
+	<sql id="selectLogisticsInfoVo">
+        select id, name, short_name, address, linkman, contact_number, phone_number, facsimile, email, postcode, bank_name, bank_account, website, remark, status, create_time, updateTime from ess_logistics_info
+    </sql>
+	
+    <select id="selectLogisticsInfoList" parameterType="com.bangdao.requestVo.essentialInfo.LogisticsInfoRequest"
+            resultMap="LogisticsInfoResult">
+        <include refid="selectLogisticsInfoVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="name != null and name != ''"> and name = #{name}</if>
+             <if test="shortName != null and shortName != ''"> and short_name = #{shortName}</if>
+             <if test="address != null and address != ''"> and address = #{address}</if>
+             <if test="linkman != null and linkman != ''"> and linkman = #{linkman}</if>
+             <if test="contactNumber != null and contactNumber != ''"> and contact_number = #{contactNumber}</if>
+             <if test="phoneNumber != null and phoneNumber != ''"> and phone_number = #{phoneNumber}</if>
+             <if test="facsimile != null and facsimile != ''"> and facsimile = #{facsimile}</if>
+             <if test="email != null and email != ''"> and email = #{email}</if>
+             <if test="postcode != null and postcode != ''"> and postcode = #{postcode}</if>
+             <if test="bankName != null and bankName != ''"> and bank_name = #{bankName}</if>
+             <if test="bankAccount != null and bankAccount != ''"> and bank_account = #{bankAccount}</if>
+             <if test="website != null and website != ''"> and website = #{website}</if>
+             <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+             and status = 1
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="updateTime != null and updateTime != ''"> and updateTime = #{updateTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectLogisticsInfoById" parameterType="Integer" resultMap="LogisticsInfoResult">
+        <include refid="selectLogisticsInfoVo"/>
+        where id = #{id} and status = 1
+    </select>
+
+    <insert id="insertLogisticsInfo" parameterType="LogisticsInfo">
+        insert into ess_logistics_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != '' ">name,</if>
+			<if test="shortName != null and shortName != '' ">short_name,</if>
+			<if test="address != null and address != '' ">address,</if>
+			<if test="linkman != null and linkman != '' ">linkman,</if>
+			<if test="contactNumber != null and contactNumber != '' ">contact_number,</if>
+			<if test="phoneNumber != null and phoneNumber != '' ">phone_number,</if>
+			<if test="facsimile != null and facsimile != '' ">facsimile,</if>
+			<if test="email != null and email != '' ">email,</if>
+			<if test="postcode != null and postcode != '' ">postcode,</if>
+			<if test="bankName != null and bankName != '' ">bank_name,</if>
+			<if test="bankAccount != null and bankAccount != '' ">bank_account,</if>
+			<if test="website != null and website != '' ">website,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			status,
+			create_time,
+			<if test="updateTime != null and updateTime != '' ">updateTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">#{name},</if>
+			<if test="shortName != null and shortName != ''">#{shortName},</if>
+			<if test="address != null and address != ''">#{address},</if>
+			<if test="linkman != null and linkman != ''">#{linkman},</if>
+			<if test="contactNumber != null and contactNumber != ''">#{contactNumber},</if>
+			<if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber},</if>
+			<if test="facsimile != null and facsimile != ''">#{facsimile},</if>
+			<if test="email != null and email != ''">#{email},</if>
+			<if test="postcode != null and postcode != ''">#{postcode},</if>
+			<if test="bankName != null and bankName != ''">#{bankName},</if>
+			<if test="bankAccount != null and bankAccount != ''">#{bankAccount},</if>
+			<if test="website != null and website != ''">#{website},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			1,
+			NOW(),
+			<if test="updateTime != null and updateTime != ''">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateLogisticsInfo" parameterType="LogisticsInfo">
+        update ess_logistics_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="shortName != null  and shortName != ''  ">short_name = #{shortName},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="linkman != null  and linkman != ''  ">linkman = #{linkman},</if>
+            <if test="contactNumber != null  and contactNumber != ''  ">contact_number = #{contactNumber},</if>
+            <if test="phoneNumber != null  and phoneNumber != ''  ">phone_number = #{phoneNumber},</if>
+            <if test="facsimile != null  and facsimile != ''  ">facsimile = #{facsimile},</if>
+            <if test="email != null  and email != ''  ">email = #{email},</if>
+            <if test="postcode != null  and postcode != ''  ">postcode = #{postcode},</if>
+            <if test="bankName != null  and bankName != ''  ">bank_name = #{bankName},</if>
+            <if test="bankAccount != null  and bankAccount != ''  ">bank_account = #{bankAccount},</if>
+            <if test="website != null  and website != ''  ">website = #{website},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            updateTime = NOW()
+        </trim>
+        where id = #{id}  and status = 1
+    </update>
+
+	<delete id="deleteLogisticsInfoById" parameterType="Integer">
+        update ess_logistics_info set status=-1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteLogisticsInfoByIds" parameterType="String">
+        update ess_logistics_info set status=-1 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

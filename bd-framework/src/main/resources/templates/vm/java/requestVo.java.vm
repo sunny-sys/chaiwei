@@ -1,0 +1,40 @@
+package ${package}.requestVo.${classname};
+
+import com.bangdao.framework.web.requestVo.RequestEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+#foreach ($column in $columns)
+    #if($column.attrType == 'Date')
+        #break
+    #end
+#end
+
+/**
+ * ${tableComment}表 ${tableName} 请求实体
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ${className}Req extends RequestEntity {
+
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+#if($column.attrname == 'createBy'|| $column.attrname == 'createTime'
+|| $column.attrname == 'updateBy'|| $column.attrname == 'updateTime'
+|| $column.attrname == 'remark')
+#else
+    /** $column.columnComment */
+    private $column.attrType $column.attrname;
+#end
+#end
+}

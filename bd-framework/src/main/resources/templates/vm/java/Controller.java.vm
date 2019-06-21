@@ -1,0 +1,117 @@
+package ${package}.controller;
+
+import java.util.List;
+
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import com.bangdao.framework.aspectj.lang.annotation.Log;
+import com.bangdao.framework.aspectj.lang.enums.BusinessType;
+import ${package}.domain.${className};
+import ${package}.service.I${className}Service;
+import ${package}.requestVo.${classname}.${className}Req;
+import ${package}.group.${classname}.${className}Add;
+import ${package}.group.${classname}.${className}Update;
+import com.bangdao.framework.web.controller.BaseController;
+import com.bangdao.framework.web.page.TableDataInfo;
+import com.bangdao.framework.web.domain.Result;
+import org.springframework.stereotype.Controller;
+
+/**
+ * ${tableComment} 信息操作处理
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Slf4j
+@Controller
+@RequestMapping("/${moduleName}/${classname}")
+public class ${className}Controller extends BaseController {
+    #*private String prefix = "${moduleName}/${classname}";*#
+	@Autowired
+	private I${className}Service ${classname}Service;
+
+	@RequiresPermissions("${moduleName}:${classname}:view")
+	@GetMapping
+	public Result ${classname}() {#*return prefix + "/${classname}";*#
+		return success();
+	}
+
+	/**
+	 * 查询${tableComment}列表
+	 * @author ${author}
+	 */
+	@RequiresPermissions("${moduleName}:${classname}:list")
+	@PostMapping("/list")
+	@ResponseBody
+	public TableDataInfo list(@RequestBody ${className}Req ${classname}) throws Exception {
+		startPage();
+        List<${className}Resp> list = ${classname}Service.select${className}List(${classname});
+		return getDataTable(list);
+	}
+#*	/**
+	 * 新增${tableComment}
+	 */
+	@GetMapping("/add")
+	public String add() {
+	    return prefix + "/add";
+	}*#
+	/**
+	 * 新增保存${tableComment}
+	 * @author ${author}
+	 */
+	@RequiresPermissions("${moduleName}:${classname}:add")
+	@Log(title = "${tableComment}", businessType = BusinessType.INSERT)
+	@PostMapping("/add")
+	@ResponseBody
+	public Result addSave(@RequestBody @Validated({${className}Add.class}) ${className}Req ${classname},
+						  BindingResult result) throws Exception {
+	    if (result.hasErrors()){
+	        return Result.error(result.getAllErrors().get(0).getDefaultMessage());
+		}
+		return ${classname}Service.insert${className}(${classname});
+	}
+
+	/**
+	 * 查询${tableComment}详情
+	 * @author ${author}
+	 */
+	@GetMapping("/edit/{${primaryKey.attrname}}")
+	@ResponseBody
+	public Result edit(@PathVariable("${primaryKey.attrname}") ${primaryKey.attrType} ${primaryKey.attrname}) throws Exception {
+		return ${classname}Service.select${className}ById(${primaryKey.attrname});
+	}
+
+	/**
+	 * 修改保存${tableComment}
+	 * @author ${author}
+	 */
+	@RequiresPermissions("${moduleName}:${classname}:edit")
+	@Log(title = "${tableComment}", businessType = BusinessType.UPDATE)
+	@PostMapping("/edit")
+	@ResponseBody
+	public Result editSave(@RequestBody @Validated({${className}Update.class}) ${className}Req ${classname},
+						   BindingResult result) throws Exception {
+        if (result.hasErrors()){
+            return Result.error(result.getAllErrors().get(0).getDefaultMessage());
+        }
+	    return ${classname}Service.update${className}(${classname});
+	}
+
+	/**
+	 * 删除${tableComment}
+	 * @author ${author}
+	 */
+	@RequiresPermissions("${moduleName}:${classname}:remove")
+	@Log(title = "${tableComment}", businessType = BusinessType.DELETE)
+	@PostMapping("/remove")
+	@ResponseBody
+	public Result remove(String ids) throws Exception {
+		return ${classname}Service.delete${className}ByIds(ids);
+	}
+
+}

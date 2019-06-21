@@ -1,0 +1,108 @@
+package ${package}.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bangdao.framework.web.domain.Result;
+import com.bangdao.common.utils.bean.BeanUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ${package}.mapper.${className}Mapper;
+import ${package}.domain.${className};
+import ${package}.service.I${className}Service;
+import ${package}.requestVo.${classname}.${className}Req;
+import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
+
+/**
+ * ${tableComment} 服务层实现
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Slf4j
+@Service
+public class ${className}ServiceImpl implements I${className}Service {
+
+    @Autowired
+	private ${className}Mapper ${classname}Mapper;
+
+	/**
+     * 查询${tableComment}信息
+     * @author ${author}
+     * @param ${primaryKey.attrname} ${tableComment}ID
+     * @return ${tableComment}信息
+     */
+    @Override
+	public Result select${className}ById(${primaryKey.attrType} ${primaryKey.attrname}) throws Exception {
+        if (ObjectUtils.isEmpty(${primaryKey.attrname})){
+            return Result.error("参数${primaryKey.attrname}不能为空");
+        }
+		${className} data = ${classname}Mapper.select${className}ById(${primaryKey.attrname});
+
+		${className}Resp temp= new ${className}Resp();
+        BeanUtils.copyProperties(data,temp);
+	    return Result.success().put("${classname}", temp);
+	}
+	
+	/**
+     * 查询${tableComment}列表
+     * @author ${author}
+     * @param ${classname} ${tableComment}信息
+     * @return ${tableComment}集合
+     */
+	@Override
+	public List<${className}Resp> select${className}List(${className}Req ${classname}) throws Exception {
+        List<${className}> ${classname}List = ${classname}Mapper.select${className}List(${classname});
+
+        //复制数据
+        List<${className}Resp> temp = new ArrayList<${className}Resp>();
+        BeanUtils.copyListBeanProp(${classname}List,temp,${className}Resp.class);
+	    return temp;
+	}
+	
+    /**
+     * 新增${tableComment}
+     * @author ${author}
+     * @param ${classname} ${tableComment}信息
+     * @return 结果
+     */
+	@Override
+	public Result insert${className}(${className}Req ${classname}) throws Exception {
+		${className} temp = new ${className}();
+        BeanUtils.copyProperties(${classname},temp);
+        int count = ${classname}Mapper.insert${className}(temp);
+	    return count > 0 ? Result.success() : Result.error();
+	}
+	
+	/**
+     * 修改${tableComment}
+     * @author ${author}
+     * @param ${classname} ${tableComment}信息
+     * @return 结果
+     */
+	@Override
+	public Result update${className}(${className}Req ${classname}) throws Exception {
+		${className} temp = new ${className}();
+        BeanUtils.copyProperties(${classname},temp);
+        int count = ${classname}Mapper.update${className}(temp);
+	    return count > 0 ? Result.success() : Result.error();
+	}
+
+	/**
+     * 删除${tableComment}对象
+     * @author ${author}
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+	@Override
+	public Result delete${className}ByIds(String ids) throws Exception {
+        if (StringUtils.isEmpty(ids)){
+            return Result.error("参数ids不能为空");
+        }
+		int count = ${classname}Mapper.delete${className}ByIds(ids.split(","));
+		return count > 0 ? Result.success() : Result.error();
+	}
+	
+}

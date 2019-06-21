@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.system.WarehouseMapper">
+    
+    <resultMap type="Warehouse" id="WarehouseResult">
+        <result property="warehouseId"    column="warehouse_id"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="handManId"    column="hand_man_id"    />
+        <result property="dateOfStorage"    column="date_of_storage"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="singlePerson"    column="single_person"    />
+        <result property="dateOfProduction"    column="date_of_production"    />
+        <result property="sourceDetailedId"    column="source_detailed_id"    />
+        <result property="commodityId"    column="commodity_id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="number"    column="number"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="discount"    column="discount"    />
+        <result property="postDiscountPrice"    column="post_discount_price"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="billSource"    column="bill_source"    />
+    </resultMap>
+
+    <!--关联查询实体-->
+    <resultMap type="WarehouseResp" id="RelationResult">
+        <result property="warehouseId"    column="warehouse_id"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="handManId"    column="hand_man_id"    />
+        <result property="dateOfStorage"    column="date_of_storage"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="singlePerson"    column="single_person"    />
+        <result property="dateOfProduction"    column="date_of_production"    />
+        <result property="sourceDetailedId"    column="source_detailed_id"    />
+        <result property="commodityId"    column="commodity_id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="number"    column="number"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="discount"    column="discount"    />
+        <result property="postDiscountPrice"    column="post_discount_price"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="billSource"    column="bill_source"    />
+        <result property="commodityName"    column="commodity_name"    />
+        <result property="commodityCode"    column="commodity_code"    />
+        <result property="specifications"    column="specifications"    />
+        <result property="basicUnit"    column="basic_unit"    />
+        <result property="positionName"    column="position_name"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="handManName"    column="hand_man_name"    />
+    </resultMap>
+
+	<sql id="selectWarehouseVo">
+        select warehouse_id, supplier_id, hand_man_id, date_of_storage, document_number, single_person, date_of_production, source_detailed_id, commodity_id, position_id, number, unit_price, discount, post_discount_price, create_by, create_time, update_by, update_time, status, bill_source from sys_warehouse
+    </sql>
+
+    <!--关联查出sql-->
+	<sql id="selectRelationVo">
+        SELECT
+        a.warehouse_id,
+        a.supplier_id,
+        a.hand_man_id,
+        a.date_of_storage,
+        a.document_number,
+        a.single_person,
+        a.date_of_production,
+        a.source_detailed_id,
+        a.commodity_id,
+        a.position_id,
+        a.number,
+        a.unit_price,
+        a.discount,
+        a.post_discount_price,
+        a.create_by,
+        a.create_time,
+        a.update_by,
+        a.update_time,
+        a.bill_source,
+        b.commodity_name ,
+        b.commodity_code,
+        b.specifications,
+        b.basic_unit,
+        c.name AS position_name,
+        d.unit_name AS supplier_name,
+        e.name AS hand_man_name
+        FROM
+        sys_warehouse a
+        LEFT JOIN ess_commodity_base b ON a.commodity_id = b.id AND b.status = 1
+        LEFT JOIN ess_warehouse_info c ON a.position_id = c.id AND c.status = 1
+        LEFT JOIN ess_intercourse_unit d ON a.supplier_id = d.id AND d.status = 1
+        LEFT JOIN ess_employee e ON a.hand_man_id = e.id AND e.status = 1
+    </sql>
+
+
+
+    <!--关联查询列表-->
+    <select id="selectRelationList" parameterType="com.bangdao.requestVo.system.WarehouseReq"
+            resultMap="RelationResult">
+        <include refid="selectRelationVo"/>
+        <where>
+            <if test="warehouseId != null"> and a.warehouse_id = #{warehouseId}</if>
+             <if test="supplierId != null"> and a.supplier_id = #{supplierId}</if>
+             <if test="supplierName != null and supplierName !=''"> and d.unit_name like concat(concat('%',#{supplierName}),'%')</if>
+             <if test="handManId != null"> and a.hand_man_id = #{handManId}</if>
+             <if test="dateOfStorage != null"> and a.date_of_storage = #{dateOfStorage}</if>
+             <if test="documentNumber != null and documentNumber != ''"> and a.document_number like concat(concat('%',#{documentNumber}),'%')</if>
+            <if test="singlePerson != null and singlePerson != ''"> and a.single_person = #{singlePerson}</if>
+             <if test="dateOfProduction != null"> and a.date_of_production = #{dateOfProduction}</if>
+             <if test="sourceDetailedId != null"> and a.source_detailed_id = #{sourceDetailedId}</if>
+             <if test="commodityId != null"> and a.commodity_id = #{commodityId}</if>
+            <if test="commodityName != null and commodityName != ''">and b.commodity_name like concat(concat('%',#{commodityName}),'%')</if>
+            <if test="positionId != null"> and a.position_id = #{positionId}</if>
+             <if test="positionName != null"> and c.name like concat(concat('%',#{positionName}),'%')</if>
+             <if test="number != null"> and a.number = #{number}</if>
+             <if test="unitPrice != null"> and a.unit_price = #{unitPrice}</if>
+             <if test="discount != null and discount != ''"> and a.discount = #{discount}</if>
+             <if test="postDiscountPrice != null"> and a.post_discount_price = #{postDiscountPrice}</if>
+             <if test="createBy != null and createBy != ''"> and a.create_by = #{createBy}</if>
+             <if test="createTime != null"> and a.create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and a.update_by = #{updateBy}</if>
+             <if test="updateTime != null"> and a.update_time = #{updateTime}</if>
+             and a.status = 1
+             <if test="billSource != null and billSource != ''"> and a.bill_source = #{billSource}</if>
+         </where>
+    </select>
+
+    <!--关联查询详情-->
+    <select id="selectRelationById" parameterType="String" resultMap="RelationResult">
+        <include refid="selectRelationVo"/>
+        where a.warehouse_id = #{warehouseId}
+    </select>
+
+
+    <select id="selectWarehouseList" parameterType="com.bangdao.requestVo.system.WarehouseReq"
+            resultMap="WarehouseResult">
+        <include refid="selectWarehouseVo"/>
+        <where>
+            <if test="warehouseId != null"> and warehouse_id = #{warehouseId}</if>
+             <if test="supplierId != null"> and supplier_id = #{supplierId}</if>
+             <if test="handManId != null"> and hand_man_id = #{handManId}</if>
+             <if test="dateOfStorage != null"> and date_of_storage = #{dateOfStorage}</if>
+             <if test="documentNumber != null and documentNumber != ''"> and document_number = #{documentNumber}</if>
+             <if test="singlePerson != null and singlePerson != ''"> and single_person = #{singlePerson}</if>
+             <if test="dateOfProduction != null"> and date_of_production = #{dateOfProduction}</if>
+             <if test="sourceDetailedId != null"> and source_detailed_id = #{sourceDetailedId}</if>
+             <if test="commodityId != null"> and commodity_id = #{commodityId}</if>
+             <if test="positionId != null"> and position_id = #{positionId}</if>
+             <if test="number != null"> and number = #{number}</if>
+             <if test="unitPrice != null"> and unit_price = #{unitPrice}</if>
+             <if test="discount != null and discount != ''"> and discount = #{discount}</if>
+             <if test="postDiscountPrice != null"> and post_discount_price = #{postDiscountPrice}</if>
+             <if test="createBy != null and createBy != ''"> and create_by = #{createBy}</if>
+             <if test="createTime != null"> and create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy}</if>
+             <if test="updateTime != null"> and update_time = #{updateTime}</if>
+             and status = 1
+             <if test="billSource != null and billSource != ''"> and bill_source = #{billSource}</if>
+         </where>
+    </select>
+
+    <select id="selectWarehouseById" parameterType="String" resultMap="WarehouseResult">
+        <include refid="selectWarehouseVo"/>
+        where warehouse_id = #{warehouseId}
+    </select>
+
+    <insert id="insertWarehouse" parameterType="Warehouse">
+        insert into sys_warehouse
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="warehouseId != null">warehouse_id,</if>
+                    <if test="supplierId != null">supplier_id,</if>
+                    <if test="handManId != null">hand_man_id,</if>
+                    <if test="dateOfStorage != null">date_of_storage,</if>
+                    <if test="documentNumber != null and documentNumber != '' ">document_number,</if>
+                    <if test="singlePerson != null and singlePerson != '' ">single_person,</if>
+                    <if test="dateOfProduction != null">date_of_production,</if>
+                    <if test="sourceDetailedId != null">source_detailed_id,</if>
+                    <if test="commodityId != null">commodity_id,</if>
+                    <if test="positionId != null">position_id,</if>
+                    <if test="number != null">number,</if>
+                    <if test="unitPrice != null">unit_price,</if>
+                    <if test="discount != null and discount != '' ">discount,</if>
+                    <if test="postDiscountPrice != null">post_discount_price,</if>
+                    <if test="createBy != null and createBy != '' ">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null and updateBy != '' ">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="status != null">status,</if>
+                    <if test="billSource != null and billSource != '' ">bill_source,</if>
+             </trim>
+             <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="warehouseId != null">#{warehouseId},</if>
+                    <if test="supplierId != null">#{supplierId},</if>
+                    <if test="handManId != null">#{handManId},</if>
+                    <if test="dateOfStorage != null">#{dateOfStorage},</if>
+                    <if test="documentNumber != null and documentNumber != '' ">#{documentNumber},</if>
+                    <if test="singlePerson != null and singlePerson != '' ">#{singlePerson},</if>
+                    <if test="dateOfProduction != null">#{dateOfProduction},</if>
+                    <if test="sourceDetailedId != null">#{sourceDetailedId},</if>
+                    <if test="commodityId != null">#{commodityId},</if>
+                    <if test="positionId != null">#{positionId},</if>
+                    <if test="number != null">#{number},</if>
+                    <if test="unitPrice != null">#{unitPrice},</if>
+                    <if test="discount != null and discount != '' ">#{discount},</if>
+                    <if test="postDiscountPrice != null">#{postDiscountPrice},</if>
+                    <if test="createBy != null and createBy != '' ">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null and updateBy != '' ">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="billSource != null and billSource != '' ">#{billSource},</if>
+             </trim>
+    </insert>
+
+    <insert id="batchInsertOrUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            insert into sys_warehouse
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.warehouseId != null and item.warehouseId != ''">warehouse_id,</if>
+                <if test="item.supplierId != null">supplier_id,</if>
+                <if test="item.handManId != null">hand_man_id,</if>
+                <if test="item.dateOfStorage != null">date_of_storage,</if>
+                <if test="item.documentNumber != null and item.documentNumber != '' ">document_number,</if>
+                <if test="item.singlePerson != null and item.singlePerson != '' ">single_person,</if>
+                <if test="item.dateOfProduction != null">date_of_production,</if>
+                <if test="item.sourceDetailedId != null">source_detailed_id,</if>
+                <if test="item.commodityId != null">commodity_id,</if>
+                <if test="item.positionId != null">position_id,</if>
+                <if test="item.number != null">number,</if>
+                <if test="item.unitPrice != null">unit_price,</if>
+                <if test="item.discount != null and item.discount != '' ">discount,</if>
+                <if test="item.postDiscountPrice != null">post_discount_price,</if>
+                <if test="item.createBy != null and item.createBy != '' ">create_by,</if>
+                <if test="item.createTime != null">create_time,</if>
+                <if test="item.updateBy != null and item.updateBy != '' ">update_by,</if>
+                <if test="item.updateTime != null">update_time,</if>
+                <if test="item.status != null">status,</if>
+                <if test="item.billSource != null and item.billSource != '' ">bill_source,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.warehouseId != null and item.warehouseId != ''">#{item.warehouseId},</if>
+                <if test="item.supplierId != null">#{item.supplierId},</if>
+                <if test="item.handManId != null">#{item.handManId},</if>
+                <if test="item.dateOfStorage != null">#{item.dateOfStorage},</if>
+                <if test="item.documentNumber != null and item.documentNumber != '' ">#{item.documentNumber},</if>
+                <if test="item.singlePerson != null and item.singlePerson != '' ">#{item.singlePerson},</if>
+                <if test="item.dateOfProduction != null">#{item.dateOfProduction},</if>
+                <if test="item.sourceDetailedId != null">#{item.sourceDetailedId},</if>
+                <if test="item.commodityId != null">#{item.commodityId},</if>
+                <if test="item.positionId != null">#{item.positionId},</if>
+                <if test="item.number != null">#{item.number},</if>
+                <if test="item.unitPrice != null">#{item.unitPrice},</if>
+                <if test="item.discount != null and item.discount != '' ">#{item.discount},</if>
+                <if test="item.postDiscountPrice != null">#{item.postDiscountPrice},</if>
+                <if test="item.createBy != null and item.createBy != '' ">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null and item.updateBy != '' ">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.status != null">#{item.status},</if>
+                <if test="item.billSource != null and item.billSource != '' ">#{item.billSource},</if>
+            </trim>
+            ON DUPLICATE KEY UPDATE
+            <trim  suffixOverrides=",">
+                <if test="item.warehouseId != null and item.warehouseId != ''">warehouse_id = #{item.warehouseId},</if>
+                <if test="item.supplierId != null">supplier_id = #{item.supplierId},</if>
+                <if test="item.handManId != null">hand_man_id = #{item.handManId},</if>
+                <if test="item.dateOfStorage != null">date_of_storage = #{item.dateOfStorage},</if>
+                <if test="item.documentNumber != null and item.documentNumber != '' ">document_number = #{item.documentNumber},</if>
+                <if test="item.singlePerson != null and item.singlePerson != '' ">single_person = #{item.singlePerson},</if>
+                <if test="item.dateOfProduction != null">date_of_production = #{item.dateOfProduction},</if>
+                <if test="item.sourceDetailedId != null">source_detailed_id = #{item.sourceDetailedId},</if>
+                <if test="item.commodityId != null">commodity_id = #{item.commodityId},</if>
+                <if test="item.positionId != null">position_id = #{item.positionId},</if>
+                <if test="item.number != null">number = #{item.number},</if>
+                <if test="item.unitPrice != null">unit_price = #{item.unitPrice},</if>
+                <if test="item.discount != null and item.discount != '' ">discount = #{item.discount},</if>
+                <if test="item.postDiscountPrice != null">post_discount_price = #{item.postDiscountPrice},</if>
+                <if test="item.createBy != null  and item.createBy != ''  ">create_by = #{item.createBy},</if>
+                <if test="item.createTime != null  ">create_time = #{item.createTime},</if>
+                <if test="item.updateBy != null  and item.updateBy != ''  ">update_by = #{item.updateBy},</if>
+                <if test="item.updateTime != null  ">update_time = #{item.updateTime},</if>
+                <if test="item.status != null  ">status = #{item.status},</if>
+                <if test="item.billSource != null and item.billSource != '' ">bill_source = #{item.billSource},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+
+    <update id="updateWarehouse" parameterType="Warehouse">
+        update sys_warehouse
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="supplierId != null">supplier_id = #{supplierId},</if>
+                    <if test="handManId != null">hand_man_id = #{handManId},</if>
+                    <if test="dateOfStorage != null">date_of_storage = #{dateOfStorage},</if>
+                    <if test="documentNumber != null and documentNumber != '' ">document_number = #{documentNumber},</if>
+                    <if test="singlePerson != null and singlePerson != '' ">single_person = #{singlePerson},</if>
+                    <if test="dateOfProduction != null">date_of_production = #{dateOfProduction},</if>
+                    <if test="sourceDetailedId != null">source_detailed_id = #{sourceDetailedId},</if>
+                    <if test="commodityId != null">commodity_id = #{commodityId},</if>
+                    <if test="positionId != null">position_id = #{positionId},</if>
+                    <if test="number != null">number = #{number},</if>
+                    <if test="unitPrice != null">unit_price = #{unitPrice},</if>
+                    <if test="discount != null and discount != '' ">discount = #{discount},</if>
+                    <if test="postDiscountPrice != null">post_discount_price = #{postDiscountPrice},</if>
+                    <if test="createBy != null and createBy != '' ">create_by = #{createBy},</if>
+                    <if test="createTime != null">create_time = #{createTime},</if>
+                    <if test="updateBy != null and updateBy != '' ">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="billSource != null and billSource != '' ">bill_source = #{billSource},</if>
+            </trim>
+        where warehouse_id = #{warehouseId}
+    </update>
+
+	<delete id="deleteWarehouseById" parameterType="String">
+        update sys_warehouse set status= -1 where warehouse_id = #{warehouseId}
+    </delete>
+	
+    <delete id="deleteWarehouseByIds" parameterType="String">
+        update sys_warehouse set status= -1  where warehouse_id in
+        <foreach item="warehouseId" collection="array" open="(" separator="," close=")">
+            #{warehouseId}
+        </foreach>
+    </delete>
+    
+</mapper>

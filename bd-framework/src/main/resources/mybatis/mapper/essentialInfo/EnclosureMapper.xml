@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.EnclosureMapper">
+    
+    <resultMap type="Enclosure" id="EnclosureResult">
+        <result property="id"    column="id"    />
+        <result property="legalRepresentative"    column="legal_representative"    />
+        <result property="registeredCapital"    column="registered_capital"    />
+        <result property="accountOpeningBank"    column="account_opening_bank"    />
+        <result property="accountNumber"    column="account_number"    />
+        <result property="economicType"    column="economic_type"    />
+        <result property="dutyParagraph"    column="duty_paragraph"    />
+        <result property="customerSource"    column="customer_source"    />
+        <result property="industry"    column="industry"    />
+        <result property="delivery"    column="delivery"    />
+        <result property="businessType"    column="business_type"    />
+        <result property="customerLevel"    column="customer_level"    />
+        <result property="customerStatus"    column="customer_status"    />
+        <result property="customerProfile"    column="customer_profile"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+	
+	<sql id="selectEnclosureVo">
+        select id, legal_representative, registered_capital, account_opening_bank, account_number, economic_type, duty_paragraph, customer_source, industry, delivery, business_type, customer_level, customer_status, customer_profile, create_time, status from ess_enclosure
+    </sql>
+	
+    <select id="selectEnclosureList" parameterType="com.bangdao.requestVo.essentialInfo.EnclosureRequest"
+            resultMap="EnclosureResult">
+        <include refid="selectEnclosureVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="legalRepresentative != null and legalRepresentative != ''"> and legal_representative = #{legalRepresentative}</if>
+             <if test="registeredCapital != null and registeredCapital != ''"> and registered_capital = #{registeredCapital}</if>
+             <if test="accountOpeningBank != null and accountOpeningBank != ''"> and account_opening_bank = #{accountOpeningBank}</if>
+             <if test="accountNumber != null and accountNumber != ''"> and account_number = #{accountNumber}</if>
+             <if test="economicType != null and economicType != ''"> and economic_type = #{economicType}</if>
+             <if test="dutyParagraph != null and dutyParagraph != ''"> and duty_paragraph = #{dutyParagraph}</if>
+             <if test="customerSource != null and customerSource != ''"> and customer_source = #{customerSource}</if>
+             <if test="industry != null and industry != ''"> and industry = #{industry}</if>
+             <if test="delivery != null and delivery != ''"> and delivery = #{delivery}</if>
+             <if test="businessType != null and businessType != ''"> and business_type = #{businessType}</if>
+             <if test="customerLevel != null and customerLevel != ''"> and customer_level = #{customerLevel}</if>
+             <if test="customerStatus != null and customerStatus != ''"> and customer_status = #{customerStatus}</if>
+             <if test="customerProfile != null and customerProfile != ''"> and customer_profile = #{customerProfile}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
+         </where>
+    </select>
+    
+    <select id="selectEnclosureById" parameterType="Integer" resultMap="EnclosureResult">
+        <include refid="selectEnclosureVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEnclosure" parameterType="Enclosure">
+        insert into ess_enclosure
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="legalRepresentative != null and legalRepresentative != '' ">legal_representative,</if>
+			<if test="registeredCapital != null and registeredCapital != '' ">registered_capital,</if>
+			<if test="accountOpeningBank != null and accountOpeningBank != '' ">account_opening_bank,</if>
+			<if test="accountNumber != null and accountNumber != '' ">account_number,</if>
+			<if test="economicType != null and economicType != '' ">economic_type,</if>
+			<if test="dutyParagraph != null and dutyParagraph != '' ">duty_paragraph,</if>
+			<if test="customerSource != null and customerSource != '' ">customer_source,</if>
+			<if test="industry != null and industry != '' ">industry,</if>
+			<if test="delivery != null and delivery != '' ">delivery,</if>
+			<if test="businessType != null and businessType != '' ">business_type,</if>
+			<if test="customerLevel != null and customerLevel != '' ">customer_level,</if>
+			<if test="customerStatus != null and customerStatus != '' ">customer_status,</if>
+			<if test="customerProfile != null and customerProfile != '' ">customer_profile,</if>
+			<if test="createTime != null and createTime != '' ">create_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="legalRepresentative != null and legalRepresentative != ''">#{legalRepresentative},</if>
+			<if test="registeredCapital != null and registeredCapital != ''">#{registeredCapital},</if>
+			<if test="accountOpeningBank != null and accountOpeningBank != ''">#{accountOpeningBank},</if>
+			<if test="accountNumber != null and accountNumber != ''">#{accountNumber},</if>
+			<if test="economicType != null and economicType != ''">#{economicType},</if>
+			<if test="dutyParagraph != null and dutyParagraph != ''">#{dutyParagraph},</if>
+			<if test="customerSource != null and customerSource != ''">#{customerSource},</if>
+			<if test="industry != null and industry != ''">#{industry},</if>
+			<if test="delivery != null and delivery != ''">#{delivery},</if>
+			<if test="businessType != null and businessType != ''">#{businessType},</if>
+			<if test="customerLevel != null and customerLevel != ''">#{customerLevel},</if>
+			<if test="customerStatus != null and customerStatus != ''">#{customerStatus},</if>
+			<if test="customerProfile != null and customerProfile != ''">#{customerProfile},</if>
+			<if test="createTime != null and createTime != ''">#{createTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateEnclosure" parameterType="Enclosure">
+        update ess_enclosure
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="legalRepresentative != null  and legalRepresentative != ''  ">legal_representative = #{legalRepresentative},</if>
+            <if test="registeredCapital != null  and registeredCapital != ''  ">registered_capital = #{registeredCapital},</if>
+            <if test="accountOpeningBank != null  and accountOpeningBank != ''  ">account_opening_bank = #{accountOpeningBank},</if>
+            <if test="accountNumber != null  and accountNumber != ''  ">account_number = #{accountNumber},</if>
+            <if test="economicType != null  and economicType != ''  ">economic_type = #{economicType},</if>
+            <if test="dutyParagraph != null  and dutyParagraph != ''  ">duty_paragraph = #{dutyParagraph},</if>
+            <if test="customerSource != null  and customerSource != ''  ">customer_source = #{customerSource},</if>
+            <if test="industry != null  and industry != ''  ">industry = #{industry},</if>
+            <if test="delivery != null  and delivery != ''  ">delivery = #{delivery},</if>
+            <if test="businessType != null  and businessType != ''  ">business_type = #{businessType},</if>
+            <if test="customerLevel != null  and customerLevel != ''  ">customer_level = #{customerLevel},</if>
+            <if test="customerStatus != null  and customerStatus != ''  ">customer_status = #{customerStatus},</if>
+            <if test="customerProfile != null  and customerProfile != ''  ">customer_profile = #{customerProfile},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteEnclosureById" parameterType="Integer">
+        delete from ess_enclosure where id = #{id}
+    </delete>
+	
+    <delete id="deleteEnclosureByIds" parameterType="String">
+        delete from ess_enclosure where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.purchase.BillPaymentBaseMapper">
+    
+    <resultMap type="BillPaymentBase" id="BillPaymentBaseResult">
+        <result property="id"    column="id"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="handManId"    column="hand_man_id"    />
+        <result property="paymentType"    column="payment_type"    />
+        <result property="writeOff"    column="write_off"    />
+        <result property="billDiscount"    column="bill_discount"    />
+        <result property="amountPayment"    column="amount_payment"    />
+        <result property="billDate"    column="bill_date"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="singlePerson"    column="single_person"    />
+        <result property="dateOfProduction"    column="date_of_production"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <!--查询关联信息sql-->
+    <resultMap type="BillPaymentBaseResp" id="RespResult">
+        <result property="id"    column="id"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="handManId"    column="hand_man_id"    />
+        <result property="handManName"    column="hand_man_name"    />
+        <result property="paymentType"    column="payment_type"    />
+        <result property="writeOff"    column="write_off"    />
+        <result property="billDiscount"    column="bill_discount"    />
+        <result property="amountPayment"    column="amount_payment"    />
+        <result property="billDate"    column="bill_date"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="singlePerson"    column="single_person"    />
+        <result property="dateOfProduction"    column="date_of_production"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <!--查询关联信息sql-->
+    <sql id="selectRelationVo">
+        SELECT
+	pur.id,
+	pur.supplier_id,
+	unit.unit_name AS supplier_name,
+	pur.hand_man_id,
+	employee. name AS hand_man_name,
+	pur.payment_type,
+	pur.write_off,
+	pur.bill_discount,
+	pur.amount_payment,
+	pur.bill_date,
+	pur.document_number,
+	pur.single_person,
+	pur.date_of_production,
+	pur.remark,
+	pur.create_by,
+	pur.create_time,
+	pur.update_by,
+	pur.update_time
+    FROM
+        pur_bill_payment_base pur
+    LEFT JOIN ess_intercourse_unit unit ON pur.supplier_id = unit.id
+    AND unit. STATUS = 1
+    LEFT JOIN ess_employee employee ON employee.id = pur.hand_man_id
+    AND employee. STATUS = 1
+    </sql>
+
+    <!--查询关联信息sql-->
+    <select id="selectRelationById" parameterType="Integer" resultMap="RespResult">
+        <include refid="selectRelationVo"/>
+        where pur.id = #{id}
+    </select>
+
+    <!--查询关联信息sql-->
+    <select id="selectRelationList" parameterType="com.bangdao.requestVo.purchase.BillPaymentBaseReq"
+            resultMap="RespResult">
+        <include refid="selectRelationVo"/>
+        <where>
+        <if test="id != null and id != ''"> and pur.id = #{id}</if>
+        <if test="supplierId != null and supplierId != ''"> and pur.supplier_id = #{supplierId}</if>
+        <if test="handManId != null and handManId != ''"> and pur.hand_man_id = #{handManId}</if>
+        <if test="paymentType != null and paymentType != ''"> and pur.payment_type = #{paymentType}</if>
+        <if test="writeOff != null and writeOff != ''"> and pur.write_off = #{writeOff}</if>
+        <if test="billDiscount != null and billDiscount != ''"> and pur.bill_discount = #{billDiscount}</if>
+        <if test="amountPayment != null and amountPayment != ''"> and pur.amount_payment = #{amountPayment}</if>
+        <if test="billDate != null"> and pur.bill_date = #{billDate}</if>
+        <if test="documentNumber != null and documentNumber != ''"> and pur.document_number = #{documentNumber}</if>
+        <if test="singlePerson != null and singlePerson != ''"> and pur.single_person = #{singlePerson}</if>
+        <if test="dateOfProduction != null"> and pur.date_of_production = #{dateOfProduction}</if>
+        <if test="remark != null and remark != ''"> and pur.remark = #{remark}</if>
+        <if test="createBy != null and createBy != ''"> and create_by = #{createBy}</if>
+        <if test="createTime != null"> and create_time = #{createTime}</if>
+        <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy}</if>
+        <if test="updateTime != null"> and update_time = #{updateTime}</if>
+        <if test="status != null and status != ''"> and pur.status = #{status}</if>
+    </where>
+    </select>
+
+    <sql id="selectBillPaymentBaseVo">
+        select id, supplier_id, hand_man_id, payment_type, write_off, bill_discount, amount_payment, bill_date, document_number, single_person, date_of_production, remark, create_by, create_time, update_by, update_time, status from pur_bill_payment_base
+    </sql>
+
+    <select id="selectBillPaymentBaseList" parameterType="com.bangdao.requestVo.purchase.BillPaymentBaseReq"
+            resultMap="BillPaymentBaseResult">
+        <include refid="selectBillPaymentBaseVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="supplierId != null and supplierId != ''"> and supplier_id = #{supplierId}</if>
+             <if test="handManId != null and handManId != ''"> and hand_man_id = #{handManId}</if>
+             <if test="paymentType != null and paymentType != ''"> and payment_type = #{paymentType}</if>
+             <if test="writeOff != null and writeOff != ''"> and write_off = #{writeOff}</if>
+             <if test="billDiscount != null and billDiscount != ''"> and bill_discount = #{billDiscount}</if>
+             <if test="amountPayment != null and amountPayment != ''"> and amount_payment = #{amountPayment}</if>
+             <if test="billDate != null"> and bill_date = #{billDate}</if>
+             <if test="documentNumber != null and documentNumber != ''"> and document_number = #{documentNumber}</if>
+             <if test="singlePerson != null and singlePerson != ''"> and single_person = #{singlePerson}</if>
+             <if test="dateOfProduction != null"> and date_of_production = #{dateOfProduction}</if>
+             <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+             <if test="createBy != null and createBy != ''"> and create_by = #{createBy}</if>
+             <if test="createTime != null"> and create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy}</if>
+             <if test="updateTime != null"> and update_time = #{updateTime}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
+         </where>
+    </select>
+    
+    <select id="selectBillPaymentBaseById" parameterType="Integer" resultMap="BillPaymentBaseResult">
+        <include refid="selectBillPaymentBaseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBillPaymentBase" parameterType="BillPaymentBase">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into pur_bill_payment_base
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="supplierId != null and supplierId != '' ">supplier_id,</if>
+			<if test="handManId != null and handManId != '' ">hand_man_id,</if>
+			<if test="paymentType != null and paymentType != '' ">payment_type,</if>
+			<if test="writeOff != null and writeOff != '' ">write_off,</if>
+			<if test="billDiscount != null and billDiscount != '' ">bill_discount,</if>
+			<if test="amountPayment != null and amountPayment != '' ">amount_payment,</if>
+			<if test="billDate != null">bill_date,</if>
+			<if test="documentNumber != null and documentNumber != '' ">document_number,</if>
+			<if test="singlePerson != null and singlePerson != '' ">single_person,</if>
+			<if test="dateOfProduction != null">date_of_production,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="createBy != null and createBy != '' ">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null and updateBy != '' ">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="supplierId != null and supplierId != ''">#{supplierId},</if>
+			<if test="handManId != null and handManId != ''">#{handManId},</if>
+			<if test="paymentType != null and paymentType != ''">#{paymentType},</if>
+			<if test="writeOff != null and writeOff != ''">#{writeOff},</if>
+			<if test="billDiscount != null and billDiscount != ''">#{billDiscount},</if>
+			<if test="amountPayment != null and amountPayment != ''">#{amountPayment},</if>
+			<if test="billDate != null">#{billDate},</if>
+			<if test="documentNumber != null and documentNumber != ''">#{documentNumber},</if>
+			<if test="singlePerson != null and singlePerson != ''">#{singlePerson},</if>
+			<if test="dateOfProduction != null">#{dateOfProduction},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateBillPaymentBase" parameterType="BillPaymentBase">
+        update pur_bill_payment_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supplierId != null  ">supplier_id = #{supplierId},</if>
+            <if test="handManId != null  ">hand_man_id = #{handManId},</if>
+            <if test="paymentType != null  and paymentType != ''  ">payment_type = #{paymentType},</if>
+            <if test="writeOff != null  ">write_off = #{writeOff},</if>
+            <if test="billDiscount != null  ">bill_discount = #{billDiscount},</if>
+            <if test="amountPayment != null  ">amount_payment = #{amountPayment},</if>
+            <if test="billDate != null  ">bill_date = #{billDate},</if>
+            <if test="documentNumber != null  and documentNumber != ''  ">document_number = #{documentNumber},</if>
+            <if test="singlePerson != null  and singlePerson != ''  ">single_person = #{singlePerson},</if>
+            <if test="dateOfProduction != null  ">date_of_production = #{dateOfProduction},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteBillPaymentBaseById" parameterType="Integer">
+        update pur_bill_payment_base set status= -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteBillPaymentBaseByIds" parameterType="String">
+        update pur_bill_payment_base set status= -1  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

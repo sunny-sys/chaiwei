@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.repertoryManage.ManageAllotBaseMapper">
+    
+    <resultMap type="ManageAllotBaseResp" id="ManageAllotBaseResult">
+        <result property="id"    column="id"    />
+        <result property="outWarehouseId"    column="out_warehouse_id"    />
+        <result property="inWarehouseId"    column="in_warehouse_id"    />
+        <result property="handManId"    column="hand_man_id"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="allotDate"    column="allot_date"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="singlePerson"    column="single_person"    />
+        <result property="dateOfProduction"    column="date_of_production"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="handManName"    column="hand_man_name"    />
+        <result property="outWarehouseName"    column="out_warehouse_name"    />
+        <result property="inWarehouseName"    column="in_warehouse_name"    />
+        <result property="approvalStatus"    column="approval_status"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="submitBy"    column="submit_by"    />
+        <result property="effectiveTime"    column="effective_time"    />
+    </resultMap>
+	
+	<sql id="selectManageAllotBaseVo">
+        select r.id, r.out_warehouse_id,r.in_warehouse_id ,r.hand_man_id, r.total_amount, r.allot_date, r.document_number, 
+        r.single_person, r.date_of_production, r.remark, r.create_by, r.create_time, r.update_by, 
+        r.update_time,r.approval_status,r.submit_time,r.submit_by,r.effective_time,e.name AS hand_man_name, w1.name AS out_warehouse_name, w2.name AS in_warehouse_name
+        from rep_manage_allot_base r
+        LEFT JOIN ess_employee e ON e.id = r.hand_man_id AND e.STATUS = 1
+        LEFT JOIN ess_warehouse_info w1 ON w1.id = r.out_warehouse_id and w1.status=1 
+        LEFT JOIN ess_warehouse_info w2 ON w2.id = r.in_warehouse_id and w2.status=1 
+    </sql>
+	
+    <select id="selectManageAllotBaseList" parameterType="com.bangdao.requestVo.repertoryManage.ManageAllotBaseReq"
+            resultMap="ManageAllotBaseResult">
+        <include refid="selectManageAllotBaseVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and r.id = #{id}</if>
+             <if test="outWarehouseId != null and outWarehouseId != ''"> and r.out_warehouse_id = #{outWarehouseId}</if>
+             <if test="outWarehouseName != null and outWarehouseName != ''"> and w1.name like concat(concat('%',#{outWarehouseName}),'%')</if>
+             <if test="inWarehouseId != null and inWarehouseId != ''"> and r.in_warehouse_id = #{inWarehouseId}</if>
+             <if test="handManId != null and handManId != ''"> and r.hand_man_id = #{handManId}</if>
+            <if test="handManName != null  and handManName != ''"> and e.name like concat(concat('%',#{handManName}),'%')</if>
+            <if test="totalAmount != null and totalAmount != ''"> and r.total_amount = #{totalAmount}</if>
+             <if test="allotDate != null"> and r.allot_date = #{allotDate}</if>
+             <if test="documentNumber != null and documentNumber != ''"> and r.document_number = #{documentNumber}</if>
+             <if test="singlePerson != null and singlePerson != ''"> and r.single_person = #{singlePerson}</if>
+             <if test="dateOfProduction != null"> and r.date_of_production = #{dateOfProduction}</if>
+             <if test="remark != null and remark != ''"> and r.remark = #{remark}</if>
+             <if test="createBy != null and createBy != ''"> and r.create_by = #{createBy}</if>
+             <if test="createTime != null"> and r.create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and r.update_by = #{updateBy}</if>
+             <if test="updateTime != null"> and r.update_time = #{updateTime}</if>
+             <if test="ids != null">
+                 <foreach item="id" collection="ids" open=" and r.id in (" separator="," close=")">
+                     #{id}
+                 </foreach>
+             </if>
+            and r.status = 1
+            <if test="approvalStatus != null"> and r.approval_status = #{approvalStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectManageAllotBaseById" parameterType="Integer" resultMap="ManageAllotBaseResult">
+        <include refid="selectManageAllotBaseVo"/>
+        where r.id = #{id}
+    </select>
+
+    <insert id="insertManageAllotBase" parameterType="ManageAllotBase">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into rep_manage_allot_base
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="outWarehouseId != null and outWarehouseId != ''">out_warehouse_id,</if>
+            <if test="inWarehouseId != null and inWarehouseId != ''">in_warehouse_id,</if>
+			<if test="handManId != null and handManId != '' ">hand_man_id,</if>
+			<if test="totalAmount != null and totalAmount != '' ">total_amount,</if>
+			<if test="allotDate != null">allot_date,</if>
+			<if test="documentNumber != null and documentNumber != '' ">document_number,</if>
+			<if test="singlePerson != null and singlePerson != '' ">single_person,</if>
+			<if test="dateOfProduction != null">date_of_production,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="createBy != null and createBy != '' ">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null and updateBy != '' ">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+            <if test="approvalStatus != null ">approval_status,</if>
+            <if test="submitTime != null ">submit_time,</if>
+            <if test="submitBy != null ">submit_by,</if>
+            <if test="effectiveTime != null ">effective_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="outWarehouseId != null and outWarehouseId != ''">#{outWarehouseId},</if>
+			<if test="inWarehouseId != null and inWarehouseId != ''">#{inWarehouseId},</if>
+			<if test="handManId != null and handManId != ''">#{handManId},</if>
+			<if test="totalAmount != null and totalAmount != ''">#{totalAmount},</if>
+			<if test="allotDate != null">#{allotDate},</if>
+			<if test="documentNumber != null and documentNumber != ''">#{documentNumber},</if>
+			<if test="singlePerson != null and singlePerson != ''">#{singlePerson},</if>
+			<if test="dateOfProduction != null">#{dateOfProduction},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+            <if test="approvalStatus != null ">#{approvalStatus},</if>
+            <if test="submitTime != null ">#{submitTime},</if>
+            <if test="submitBy != null ">#{submitBy},</if>
+            <if test="effectiveTime != null ">#{effectiveTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateManageAllotBase" parameterType="ManageAllotBase">
+        update rep_manage_allot_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="outWarehouseId != null  ">out_warehouse_id = #{outWarehouseId},</if>
+            <if test="inWarehouseId != null  ">in_warehouse_id = #{inWarehouseId},</if>
+            <if test="handManId != null  and handManId != ''  ">hand_man_id = #{handManId},</if>
+            <if test="totalAmount != null  ">total_amount = #{totalAmount},</if>
+            <if test="allotDate != null  ">allot_date = #{allotDate},</if>
+            <if test="documentNumber != null  and documentNumber != ''  ">document_number = #{documentNumber},</if>
+            <if test="singlePerson != null  and singlePerson != ''  ">single_person = #{singlePerson},</if>
+            <if test="dateOfProduction != null  ">date_of_production = #{dateOfProduction},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="approvalStatus != null"> approval_status = #{approvalStatus},</if>
+            <if test="submitTime != null "> submit_time = #{submitTime},</if>
+            <if test="submitBy != null "> submit_by = #{submitBy},</if>
+            <if test="effectiveTime != null ">effective_time = #{effectiveTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteManageAllotBaseById" parameterType="Integer">
+        update rep_manage_allot_base set status= -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteManageAllotBaseByIds" parameterType="String">
+        update rep_manage_allot_base set status= -1  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

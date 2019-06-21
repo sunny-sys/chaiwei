@@ -1,0 +1,39 @@
+package ${package}.requestVo.${classname};
+
+import com.bangdao.framework.web.responseVo.ResponseEntity;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+#foreach ($column in $columns)
+    #if($column.attrType == 'Date')
+        #break
+    #end
+#end
+
+/**
+ * ${tableComment}表 ${tableName} 响应实体
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+public class ${className}Resp extends ResponseEntity {
+
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+#if($column.attrname == 'createBy'|| $column.attrname == 'createTime'
+|| $column.attrname == 'updateBy'|| $column.attrname == 'updateTime'
+|| $column.attrname == 'remark')
+#else
+    /** $column.columnComment */
+    private $column.attrType $column.attrname;
+#end
+#end
+}

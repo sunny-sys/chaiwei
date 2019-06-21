@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.AreasMapper">
+    
+    <resultMap type="Areas" id="AreasResult">
+        <result property="id"    column="id"    />
+        <result property="areaid"    column="areaid"    />
+        <result property="area"    column="area"    />
+        <result property="parentid"    column="parentid"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+	
+	<sql id="selectAreasVo">
+        select id, areaid, area, parentid, sort from sys_areas
+    </sql>
+	
+    <select id="selectAreasList" parameterType="com.bangdao.requestVo.essentialInfo.AreasRequest"
+            resultMap="AreasResult">
+        <include refid="selectAreasVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="areaid != null and areaid != ''"> and areaid = #{areaid}</if>
+             <if test="area != null and area != ''"> and area = #{area}</if>
+             <if test="parentid != null and parentid != ''"> and parentid = #{parentid}</if>
+             <if test="sort != null and sort != ''"> and sort = #{sort}</if>
+         </where>
+    </select>
+    
+    <select id="selectAreasById" parameterType="Integer" resultMap="AreasResult">
+        <include refid="selectAreasVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectAreasByParentids" resultType="com.bangdao.domain.essentialInfo.Areas" parameterType="String">
+        <include refid="selectAreasVo"/>
+         where parentid in
+        <foreach item="parentid" collection="array" open="(" separator="," close=")">
+            #{parentid}
+        </foreach>
+    </select>
+
+    <select id="selectAreasListByParentid" resultMap="AreasResult" parameterType="String">
+        <include refid="selectAreasVo"/>
+        where parentid = #{parentid}
+    </select>
+
+    <insert id="insertAreas" parameterType="Areas">
+        insert into sys_areas
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="areaid != null and areaid != '' ">areaid,</if>
+			<if test="area != null and area != '' ">area,</if>
+			<if test="parentid != null and parentid != '' ">parentid,</if>
+			<if test="sort != null and sort != '' ">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="areaid != null and areaid != ''">#{areaid},</if>
+			<if test="area != null and area != ''">#{area},</if>
+			<if test="parentid != null and parentid != ''">#{parentid},</if>
+			<if test="sort != null and sort != ''">#{sort},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateAreas" parameterType="Areas">
+        update sys_areas
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaid != null  and areaid != ''  ">areaid = #{areaid},</if>
+            <if test="area != null  and area != ''  ">area = #{area},</if>
+            <if test="parentid != null  and parentid != ''  ">parentid = #{parentid},</if>
+            <if test="sort != null  ">sort = #{sort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateCitiesByParentid" parameterType="java.util.HashMap">
+        update sys_areas set parentid = #{targetParentid} where parentid = #{sourceParentid}
+    </update>
+
+	<delete id="deleteAreasById" parameterType="Integer">
+        delete from sys_areas where id = #{id}
+    </delete>
+	
+    <delete id="deleteAreasByIds" parameterType="String">
+        delete from sys_areas where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.DictionaryItemMapper">
+    
+    <resultMap type="DictionaryItem" id="DictionaryItemResult">
+        <result property="id"    column="id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemValue"    column="item_value"    />
+        <result property="sort"    column="sort"    />
+        <result property="remark"    column="remark"    />
+        <result property="dicType"    column="dic_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+	
+	<sql id="selectDictionaryItemVo">
+        select id, item_name, item_value, sort, remark, dic_type, create_time, status from sys_dictionary_item
+    </sql>
+	
+    <select id="selectDictionaryItemList" parameterType="com.bangdao.requestVo.essentialInfo.DictionaryItemRequest"
+            resultMap="DictionaryItemResult">
+        <include refid="selectDictionaryItemVo"/>
+        <where>  
+            <if test="id != null"> and id = #{id}</if>
+             <if test="itemName != null and itemName != ''"> and item_name = #{itemName}</if>
+             <if test="itemValue != null and itemValue != ''"> and item_value = #{itemValue}</if>
+             <if test="sort != null"> and sort = #{sort}</if>
+             <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+             <if test="dicType != null and dicType != ''"> and dic_type = #{dicType}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
+         </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectDictionaryItemById" parameterType="Integer" resultMap="DictionaryItemResult">
+        <include refid="selectDictionaryItemVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectDictionaryItemByDicTypes" resultType="com.bangdao.domain.essentialInfo.DictionaryItem">
+        <include refid="selectDictionaryItemVo"/>
+        where dic_type in
+        <foreach item="dicType" collection="array" open="(" separator="," close=")">
+            #{dicType}
+        </foreach>
+    </select>
+
+    <select id="selectDictionaryItemByDicType" resultType="com.bangdao.domain.essentialInfo.DictionaryItem" parameterType="DictionaryItem">
+        <include refid="selectDictionaryItemVo"/>
+        where dic_type = #{dicType} and item_name = #{itemName} and item_value = #{itemValue} and id != #{id}
+    </select>
+
+    <select id="selectDictionaryItemByDt" resultMap="DictionaryItemResult" parameterType="String">
+        <include refid="selectDictionaryItemVo"/>
+        where dic_type = #{dicType}
+    </select>
+
+    <insert id="insertDictionaryItem" parameterType="DictionaryItem">
+        insert into sys_dictionary_item
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="itemName != null and itemName != '' ">item_name,</if>
+			<if test="itemValue != null">item_value,</if>
+			<if test="sort != null">sort,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="dicType != null and dicType != '' ">dic_type,</if>
+			<if test="createTime != null and createTime != '' ">create_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="itemName != null and itemName != ''">#{itemName},</if>
+			<if test="itemValue != null">#{itemValue},</if>
+			<if test="sort != null">#{sort},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="dicType != null and dicType != ''">#{dicType},</if>
+			<if test="createTime != null and createTime != ''">#{createTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateDictionaryItem" parameterType="DictionaryItem">
+        update sys_dictionary_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemName != null  and itemName != ''  ">item_name = #{itemName},</if>
+            <if test="itemValue != null  ">item_value = #{itemValue},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="dicType != null  and dicType != ''  ">dic_type = #{dicType},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateDictionaryItemByDicType" parameterType="java.util.HashMap">
+        update sys_dictionary_item set dic_type = #{targetDicType} when dic_type = #{sourceDicType}
+    </update>
+
+	<delete id="deleteDictionaryItemById" parameterType="Integer">
+        delete from sys_dictionary_item where id = #{id}
+    </delete>
+	
+    <delete id="deleteDictionaryItemByIds" parameterType="String">
+        delete from sys_dictionary_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

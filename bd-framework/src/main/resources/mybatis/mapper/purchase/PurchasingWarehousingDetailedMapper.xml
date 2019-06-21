@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.purchase.PurchasingWarehousingDetailedMapper">
+
+    <resultMap type="PurchasingWarehousingDetailed" id="PurchasingWarehousingDetailedResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="commodityId"    column="commodity_id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="number"    column="number"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="discount"    column="discount"    />
+        <result property="postDiscountPrice"    column="post_discount_price"    />
+        <result property="total"    column="total"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <!--查询关联信息sql-->
+    <resultMap type="PurchasingWarehousingDetailedResponse" id="PurchasingWarehousingDetailedRespResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="commodityId"    column="commodity_id"    />
+        <result property="commodityName"    column="commodity_name"    />
+        <result property="commodityAbbreviation"    column="commodity_abbreviation"    />
+        <result property="commodityCode"    column="commodity_code"    />
+        <result property="basicUnit"    column="basic_unit"    />
+        <result property="specifications"    column="specifications"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="positionName"    column="position_name"    />
+        <result property="number"    column="number"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="discount"    column="discount"    />
+        <result property="postDiscountPrice"    column="post_discount_price"    />
+        <result property="total"    column="total"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<select id="selectCommodityBaseList" resultType="PurchasingWarehousingDetailedResponse">
+        select id as commodityId,commodity_name as commodityName, commodity_abbreviation as commodityAbbreviation, 
+        commodity_code as commodityCode, basic_unit as basicUnit, specifications as specifications
+        from ess_commodity_base where status=1
+    </select>
+
+    <sql id="selectPurchasingWarehousingDetailedVo">
+        select id, parent_id, commodity_id, position_id, number, unit_price, discount, post_discount_price, total, remark, create_by, create_time, update_by, update_time, status from pur_purchasing_warehousing_detailed
+    </sql>
+
+    <!--查询关联信息sql-->
+    <sql id="selectRelationVo">
+    SELECT
+    pur.id,
+    pur.parent_id,
+    pur.commodity_id,
+    ess.commodity_name,
+    ess.commodity_abbreviation,
+    ess.commodity_code,
+    ess.basic_unit,
+    ess.specifications,
+    pur.position_id,
+    warehouse.name  AS  position_name,
+    pur.number,
+    pur.unit_price,
+    pur.discount,
+    pur.post_discount_price,
+    pur.total,
+    pur.remark,
+    pur.create_by,
+    pur.create_time,
+    pur.update_by,
+    pur.update_time
+    FROM
+    pur_purchasing_warehousing_detailed pur
+    LEFT JOIN
+    ess_commodity_base ess
+    ON pur.commodity_id = ess.id and ess.status = 1
+    LEFT JOIN
+    ess_warehouse_info warehouse
+    ON warehouse.id = pur.position_id and warehouse.status=1
+    </sql>
+
+    <!--查询关联信息sql-->
+    <select id="selectRelationList" parameterType="com.bangdao.requestVo.purchase.PurchasingWarehousingDetailedRequest"
+            resultMap="PurchasingWarehousingDetailedRespResult">
+        <include refid="selectRelationVo"/>
+        <where>
+            <if test="id != null"> and pur.id = #{id}</if>
+            <if test="parentId != null"> and pur.parent_id = #{parentId}</if>
+            <if test="commodityId != null"> and pur.commodity_id = #{commodityId}</if>
+            <if test="positionId != null"> and pur.position_id = #{positionId}</if>
+            <if test="number != null and number != ''"> and pur.number = #{number}</if>
+            <if test="unitPrice != null and unitPrice != ''"> and pur.unit_price = #{unitPrice}</if>
+            <if test="discount != null and discount != ''"> and pur.discount = #{discount}</if>
+            <if test="postDiscountPrice != null and postDiscountPrice != ''"> and pur.post_discount_price = #{postDiscountPrice}</if>
+            <if test="total != null and total != ''"> and pur.total = #{total}</if>
+            <if test="remark != null and remark != ''"> and pur.remark = #{remark}</if>
+            <if test="createBy != null and createBy != ''"> and pur.create_by = #{createBy}</if>
+            <if test="createTime != null"> and pur.create_time = #{createTime}</if>
+            <if test="updateBy != null and updateBy != ''"> and pur.update_by = #{updateBy}</if>
+            <if test="updateTime != null"> and pur.update_time = #{updateTime}</if>
+            <if test="status != null and status != ''"> and pur.status = #{status}</if>
+        </where>
+    </select>
+
+    <!--查询关联信息sql-->
+    <select id="selectRelationById" parameterType="Integer" resultMap="PurchasingWarehousingDetailedRespResult">
+        <include refid="selectRelationVo"/>
+        where pur.id = #{id}
+    </select>
+
+    <select id="selectPurchasingWarehousingDetailedList" parameterType="com.bangdao.requestVo.purchase.PurchasingWarehousingDetailedRequest"
+            resultMap="PurchasingWarehousingDetailedResult">
+        <include refid="selectPurchasingWarehousingDetailedVo"/>
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="parentId != null"> and parent_id = #{parentId}</if>
+            <if test="commodityId != null"> and commodity_id = #{commodityId}</if>
+            <if test="positionId != null"> and position_id = #{positionId}</if>
+            <if test="number != null and number != ''"> and number = #{number}</if>
+            <if test="unitPrice != null and unitPrice != ''"> and unit_price = #{unitPrice}</if>
+            <if test="discount != null and discount != ''"> and discount = #{discount}</if>
+            <if test="postDiscountPrice != null and postDiscountPrice != ''"> and post_discount_price = #{postDiscountPrice}</if>
+            <if test="total != null and total != ''"> and total = #{total}</if>
+            <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+            <if test="createBy != null and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="createTime != null"> and create_time = #{createTime}</if>
+            <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy}</if>
+            <if test="updateTime != null"> and update_time = #{updateTime}</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPurchasingWarehousingDetailedById" parameterType="Integer" resultMap="PurchasingWarehousingDetailedResult">
+        <include refid="selectPurchasingWarehousingDetailedVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPurchasingWarehousingDetailed" parameterType="PurchasingWarehousingDetailed">
+        insert into pur_purchasing_warehousing_detailed
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="commodityId != null">commodity_id,</if>
+            <if test="positionId != null">position_id,</if>
+            <if test="number != null and number != '' ">number,</if>
+            <if test="unitPrice != null and unitPrice != '' ">unit_price,</if>
+            <if test="discount != null and discount != '' ">discount,</if>
+            <if test="postDiscountPrice != null and postDiscountPrice != '' ">post_discount_price,</if>
+            <if test="total != null and total != '' ">total,</if>
+            <if test="remark != null and remark != '' ">remark,</if>
+            <if test="createBy != null and createBy != '' ">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null and updateBy != '' ">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null and status != '' ">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="commodityId != null">#{commodityId},</if>
+            <if test="positionId != null">#{positionId},</if>
+            <if test="number != null and number != ''">#{number},</if>
+            <if test="unitPrice != null and unitPrice != ''">#{unitPrice},</if>
+            <if test="discount != null and discount != ''">#{discount},</if>
+            <if test="postDiscountPrice != null and postDiscountPrice != ''">#{postDiscountPrice},</if>
+            <if test="total != null and total != ''">#{total},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null and status != ''">#{status},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsertOrUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            insert into pur_purchasing_warehousing_detailed
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.id != null">id,</if>
+                <if test="item.parentId != null">parent_id,</if>
+                <if test="item.commodityId != null">commodity_id,</if>
+                <if test="item.positionId != null">position_id,</if>
+                <if test="item.number != null">number,</if>
+                <if test="item.unitPrice != null ">unit_price,</if>
+                <if test="item.discount != null and item.discount != '' ">discount,</if>
+                <if test="item.postDiscountPrice != null">post_discount_price,</if>
+                <if test="item.total != null">total,</if>
+                <if test="item.remark != null and item.remark != '' ">remark,</if>
+                <if test="item.createBy != null and item.createBy != '' ">create_by,</if>
+                <if test="item.createTime != null">create_time,</if>
+                <if test="item.updateBy != null and item.updateBy != '' ">update_by,</if>
+                <if test="item.updateTime != null">update_time,</if>
+                <if test="item.status != null">status,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.id != null">#{item.id},</if>
+                <if test="item.parentId != null">#{item.parentId},</if>
+                <if test="item.commodityId != null">#{item.commodityId},</if>
+                <if test="item.positionId != null">#{item.positionId},</if>
+                <if test="item.number != null">#{item.number},</if>
+                <if test="item.unitPrice != null">#{item.unitPrice},</if>
+                <if test="item.discount != null and item.discount != ''">#{item.discount},</if>
+                <if test="item.postDiscountPrice != null">#{item.postDiscountPrice},</if>
+                <if test="item.total != null">#{item.total},</if>
+                <if test="item.remark != null and item.remark != ''">#{item.remark},</if>
+                <if test="item.createBy != null and item.createBy != ''">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null and item.updateBy != ''">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.status != null">#{item.status},</if>
+            </trim>
+            ON DUPLICATE KEY UPDATE
+            <trim suffixOverrides=",">
+                <if test="item.id != null">id = #{item.id},</if>
+                <if test="item.parentId != null  ">parent_id = #{item.parentId},</if>
+                <if test="item.commodityId != null  ">commodity_id = #{item.commodityId},</if>
+                <if test="item.positionId != null  ">position_id = #{item.positionId},</if>
+                <if test="item.number != null  ">number = #{item.number},</if>
+                <if test="item.unitPrice != null  ">unit_price = #{item.unitPrice},</if>
+                <if test="item.discount != null  and item.discount != ''  ">discount = #{item.discount},</if>
+                <if test="item.postDiscountPrice != null  ">post_discount_price = #{item.postDiscountPrice},</if>
+                <if test="item.total != null  ">total = #{item.total},</if>
+                <if test="item.remark != null  and item.remark != ''  ">remark = #{item.remark},</if>
+                <if test="item.createBy != null  and item.createBy != ''  ">create_by = #{item.createBy},</if>
+                <if test="item.createTime != null  ">create_time = #{item.createTime},</if>
+                <if test="item.updateBy != null  and item.updateBy != ''  ">update_by = #{item.updateBy},</if>
+                <if test="item.updateTime != null  ">update_time = #{item.updateTime},</if>
+                <if test="item.status != null  ">status = #{item.status},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="updatePurchasingWarehousingDetailed" parameterType="PurchasingWarehousingDetailed">
+        update pur_purchasing_warehousing_detailed
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="commodityId != null  ">commodity_id = #{commodityId},</if>
+            <if test="positionId != null  ">position_id = #{positionId},</if>
+            <if test="number != null  ">number = #{number},</if>
+            <if test="unitPrice != null  ">unit_price = #{unitPrice},</if>
+            <if test="discount != null  and discount != ''  ">discount = #{discount},</if>
+            <if test="postDiscountPrice != null  ">post_discount_price = #{postDiscountPrice},</if>
+            <if test="total != null  ">total = #{total},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePurchasingWarehousingDetailedById" parameterType="Integer">
+        update pur_purchasing_warehousing_detailed set status= -1 where id = #{id}
+    </delete>
+
+    <delete id="deletePurchasingWarehousingDetailedByIds" parameterType="String">
+        update pur_purchasing_warehousing_detailed set status= -1  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteByParentId" parameterType="String">
+        update pur_purchasing_warehousing_detailed set status= -1  where parent_id in
+        <foreach item="parentId" collection="array" open="(" separator="," close=")">
+            #{parentId}
+        </foreach>
+    </delete>
+</mapper>

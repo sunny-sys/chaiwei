@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.repertoryManage.CheckListDetailMapper">
+    
+    <resultMap type="CheckListDetailResp" id="CheckListDetailResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="commodityId"    column="commodity_id"    />
+        <result property="number"    column="number"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="checkNumber"    column="check_number"    />
+        <result property="checkUnitPrice"    column="check_unit_price"    />
+        <result property="profitLossNumber"    column="profit_loss_number"    />
+        <result property="profitLossTotal"    column="profit_loss_total"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="commodityAbbreviation"    column="commodity_abbreviation"    />
+        <result property="commodityName"    column="commodity_name"    />
+        <result property="commodityCode"    column="commodity_code"    />
+        <result property="basicUnit"    column="basic_unit"    />
+        <result property="specifications"    column="specifications"    />
+    </resultMap>
+	
+	<sql id="selectCheckListDetailVo">
+        select r.id, r.parent_id, r.commodity_id, r.number, r.unit_price, r.check_number,
+        r.check_unit_price, r.profit_loss_number, r.profit_loss_total, r.remark,
+        r.create_by, r.create_time, r.update_by, r.update_time,c.commodity_name,
+        c.commodity_abbreviation,c.commodity_code,c.basic_unit,c.specifications
+        from rep_check_list_detail r
+        LEFT JOIN ess_commodity_base c
+        ON r.commodity_id = c.id and c.status = 1 
+    </sql>
+	
+    <select id="selectCheckListDetailList" parameterType="com.bangdao.requestVo.repertoryManage.CheckListDetailReq"
+            resultMap="CheckListDetailResult">
+        <include refid="selectCheckListDetailVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and r.id = #{id}</if>
+             <if test="parentId != null and parentId != ''"> and r.parent_id = #{parentId}</if>
+             <if test="commodityId != null and commodityId != ''"> and r.commodity_id = #{commodityId}</if>
+             <if test="number != null and number != ''"> and r.number = #{number}</if>
+             <if test="unitPrice != null and unitPrice != ''"> and r.unit_price = #{unitPrice}</if>
+             <if test="checkNumber != null and checkNumber != ''"> and r.check_number = #{checkNumber}</if>
+             <if test="checkUnitPrice != null and checkUnitPrice != ''"> and r.check_unit_price = #{checkUnitPrice}</if>
+             <if test="profitLossNumber != null and profitLossNumber != ''"> and r.profit_loss_number = #{profitLossNumber}</if>
+             <if test="profitLossTotal != null and profitLossTotal != ''"> and r.profit_loss_total = #{profitLossTotal}</if>
+             <if test="remark != null and remark != ''"> and r.remark = #{remark}</if>
+             <if test="createBy != null and createBy != ''"> and r.create_by = #{createBy}</if>
+             <if test="createTime != null"> and r.create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and r.update_by = #{updateBy}</if>
+             <if test="updateTime != null"> and r.update_time = #{updateTime}</if>
+             and r.status = 1
+         </where>
+    </select>
+    
+    <select id="selectCheckListDetailById" parameterType="Integer" resultMap="CheckListDetailResult">
+        <include refid="selectCheckListDetailVo"/>
+        where id = #{id}
+    </select>
+
+ <insert id="batchInsertOrUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            insert into rep_check_list_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="item.id != null and item.id != '' ">id,</if>
+			<if test="item.parentId != null and item.parentId != '' ">parent_id,</if>
+			<if test="item.commodityId != null and item.commodityId != '' ">commodity_id,</if>
+			<if test="item.number != null and item.number != '' ">number,</if>
+			<if test="item.unitPrice != null and item.unitPrice != '' ">unit_price,</if>
+			<if test="item.checkNumber != null and item.checkNumber != '' ">check_number,</if>
+			<if test="item.checkUnitPrice != null and item.checkUnitPrice != '' ">check_unit_price,</if>
+			<if test="item.profitLossNumber != null and item.profitLossNumber != '' ">profit_loss_number,</if>
+			<if test="item.profitLossTotal != null and item.profitLossTotal != '' ">profit_loss_total,</if>
+			<if test="item.remark != null and item.remark != '' ">remark,</if>
+			<if test="item.createBy != null and item.createBy != '' ">create_by,</if>
+			<if test="item.createTime != null">create_time,</if>
+			<if test="item.updateBy != null and item.updateBy != '' ">update_by,</if>
+			<if test="item.updateTime != null">update_time,</if>
+			<if test="item.status != null and item.status != '' ">status,</if>
+        </trim>
+            <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="item.id != null and item.id != ''">#{item.id},</if>
+			<if test="item.parentId != null and item.parentId != ''">#{item.parentId},</if>
+			<if test="item.commodityId != null and item.commodityId != ''">#{item.commodityId},</if>
+			<if test="item.number != null and item.number != ''">#{item.number},</if>
+			<if test="item.unitPrice != null and item.unitPrice != ''">#{item.unitPrice},</if>
+			<if test="item.checkNumber != null and item.checkNumber != ''">#{item.checkNumber},</if>
+			<if test="item.checkUnitPrice != null and item.checkUnitPrice != ''">#{item.checkUnitPrice},</if>
+			<if test="item.profitLossNumber != null and item.profitLossNumber != ''">#{item.profitLossNumber},</if>
+			<if test="item.profitLossTotal != null and item.profitLossTotal != ''">#{item.profitLossTotal},</if>
+			<if test="item.remark != null and item.remark != ''">#{item.remark},</if>
+			<if test="item.createBy != null and item.createBy != ''">#{item.createBy},</if>
+			<if test="item.createTime != null">#{item.createTime},</if>
+			<if test="item.updateBy != null and item.updateBy != ''">#{item.updateBy},</if>
+			<if test="item.updateTime != null">#{item.updateTime},</if>
+			<if test="item.status != null and item.status != ''">#{item.status},</if>
+            </trim>
+            ON DUPLICATE KEY UPDATE
+            <trim  suffixOverrides=",">
+                <if test="item.id != null">id = #{item.id},</if>
+                <if test="item.parentId != null  ">parent_id = #{item.parentId},</if>
+                <if test="item.commodityId != null and item.commodityId != '' ">commodity_id = #{item.commodityId},</if>
+                <if test="item.number != null and item.number != '' ">number = #{item.number},</if>
+                <if test="item.unitPrice != null and item.unitPrice != '' ">unit_price = #{item.unitPrice},</if>
+                <if test="item.checkNumber != null and item.checkNumber != '' ">check_number = #{item.checkNumber},</if>
+                <if test="item.checkUnitPrice != null and item.checkUnitPrice != '' ">check_unit_price = #{item.checkUnitPrice},</if>
+                <if test="item.profitLossNumber != null and item.profitLossNumber != '' ">profit_loss_number = #{item.profitLossNumber},</if>
+                <if test="item.profitLossTotal != null and item.profitLossTotal != '' ">profit_loss_total = #{item.profitLossTotal},</if>
+                <if test="item.remark != null  and item.remark != ''  ">remark = #{item.remark},</if>
+                <if test="item.createBy != null  and item.createBy != ''  ">create_by = #{item.createBy},</if>
+                <if test="item.createTime != null  ">create_time = #{item.createTime},</if>
+                <if test="item.updateBy != null  and item.updateBy != ''  ">update_by = #{item.updateBy},</if>
+                <if test="item.updateTime != null  ">update_time = #{item.updateTime},</if>
+                <if test="item.status != null  ">status = #{item.status},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+
+    <insert id="insertCheckListDetail" parameterType="CheckListDetail">
+        insert into rep_check_list_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="parentId != null and parentId != '' ">parent_id,</if>
+			<if test="commodityId != null and commodityId != '' ">commodity_id,</if>
+			<if test="number != null and number != '' ">number,</if>
+			<if test="unitPrice != null and unitPrice != '' ">unit_price,</if>
+			<if test="checkNumber != null and checkNumber != '' ">check_number,</if>
+			<if test="checkUnitPrice != null and checkUnitPrice != '' ">check_unit_price,</if>
+			<if test="profitLossNumber != null and profitLossNumber != '' ">profit_loss_number,</if>
+			<if test="profitLossTotal != null and profitLossTotal != '' ">profit_loss_total,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="createBy != null and createBy != '' ">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null and updateBy != '' ">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="parentId != null and parentId != ''">#{parentId},</if>
+			<if test="commodityId != null and commodityId != ''">#{commodityId},</if>
+			<if test="number != null and number != ''">#{number},</if>
+			<if test="unitPrice != null and unitPrice != ''">#{unitPrice},</if>
+			<if test="checkNumber != null and checkNumber != ''">#{checkNumber},</if>
+			<if test="checkUnitPrice != null and checkUnitPrice != ''">#{checkUnitPrice},</if>
+			<if test="profitLossNumber != null and profitLossNumber != ''">#{profitLossNumber},</if>
+			<if test="profitLossTotal != null and profitLossTotal != ''">#{profitLossTotal},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCheckListDetail" parameterType="CheckListDetail">
+        update rep_check_list_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="commodityId != null  ">commodity_id = #{commodityId},</if>
+            <if test="number != null  ">number = #{number},</if>
+            <if test="unitPrice != null  ">unit_price = #{unitPrice},</if>
+            <if test="checkNumber != null  ">check_number = #{checkNumber},</if>
+            <if test="checkUnitPrice != null  ">check_unit_price = #{checkUnitPrice},</if>
+            <if test="profitLossNumber != null  ">profit_loss_number = #{profitLossNumber},</if>
+            <if test="profitLossTotal != null  ">profit_loss_total = #{profitLossTotal},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCheckListDetailById" parameterType="Integer">
+        update rep_check_list_detail set status= -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteCheckListDetailByIds" parameterType="String">
+        update rep_check_list_detail set status= -1  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCheckListDetailByParentIds" parameterType="String">
+        update rep_check_list_detail set status= -1  where parent_id in
+        <foreach item="parentId" collection="array" open="(" separator="," close=")">
+            #{parentId}
+        </foreach>
+    </delete>
+
+</mapper>

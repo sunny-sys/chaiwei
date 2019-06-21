@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.CommodityBaseMapper">
+    
+    <resultMap type="CommodityBase" id="CommodityBaseResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="commodityName"    column="commodity_name"    />
+        <result property="commodityAbbreviation"    column="commodity_abbreviation"    />
+        <result property="commodityCode"    column="commodity_code"    />
+        <result property="commodityNature"    column="commodity_nature"    />
+        <result property="commodityGoods"    column="commodity_goods"    />
+        <result property="barCode"    column="bar_code"    />
+        <result property="basicUnit"    column="basic_unit"    />
+        <result property="specifications"    column="specifications"    />
+        <result property="costAccountingMethod"    column="cost_accounting_method"    />
+        <result property="remark"    column="remark"    />
+        <result property="commodityOrigin"    column="commodity_origin"    />
+        <result property="cargoPosition"    column="cargo_position"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="fileId"    column="file_id"    />
+    </resultMap>
+	
+	<sql id="selectCommodityBaseVo">
+        select id, parent_id, commodity_name, commodity_abbreviation, commodity_code, commodity_nature, commodity_goods, bar_code, basic_unit, specifications, cost_accounting_method, remark, commodity_origin, cargo_position, create_time, status, file_id from ess_commodity_base
+    </sql>
+	
+    <select id="selectCommodityBaseList" parameterType="com.bangdao.requestVo.essentialInfo.CommodityBaseRequest"
+            resultMap="CommodityBaseResult">
+        <include refid="selectCommodityBaseVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="parentId != null and parentId != ''"> and parent_id = #{parentId}</if>
+             <if test="commodityName != null and commodityName != ''"> and commodity_name like concat(concat('%',#{commodityName}),'%')</if>
+             <if test="commodityAbbreviation != null and commodityAbbreviation != ''"> and commodity_abbreviation = #{commodityAbbreviation}</if>
+             <if test="commodityCode != null and commodityCode != ''"> and commodity_code = #{commodityCode}</if>
+             <if test="commodityNature != null and commodityNature != ''"> and commodity_nature = #{commodityNature}</if>
+             <if test="commodityGoods != null and commodityGoods != ''"> and commodity_goods = #{commodityGoods}</if>
+             <if test="barCode != null and barCode != ''"> and bar_code = #{barCode}</if>
+             <if test="basicUnit != null and basicUnit != ''"> and basic_unit = #{basicUnit}</if>
+             <if test="specifications != null and specifications != ''"> and specifications = #{specifications}</if>
+             <if test="costAccountingMethod != null and costAccountingMethod != ''"> and cost_accounting_method = #{costAccountingMethod}</if>
+             <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+             <if test="commodityOrigin != null and commodityOrigin != ''"> and commodity_origin = #{commodityOrigin}</if>
+             <if test="cargoPosition != null and cargoPosition != ''"> and cargo_position = #{cargoPosition}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
+             <if test="fileId != null and fileId != ''"> and file_id = #{fileId}</if>
+         </where>
+    </select>
+    
+    <select id="selectCommodityBaseById" parameterType="Integer" resultMap="CommodityBaseResult">
+        <include refid="selectCommodityBaseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCommodityBase" parameterType="CommodityBase">
+        insert into ess_commodity_base
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="parentId != null and parentId != '' ">parent_id,</if>
+			<if test="commodityName != null and commodityName != '' ">commodity_name,</if>
+			<if test="commodityAbbreviation != null and commodityAbbreviation != '' ">commodity_abbreviation,</if>
+			<if test="commodityCode != null and commodityCode != '' ">commodity_code,</if>
+			<if test="commodityNature != null and commodityNature != '' ">commodity_nature,</if>
+			<if test="commodityGoods != null and commodityGoods != '' ">commodity_goods,</if>
+			<if test="barCode != null and barCode != '' ">bar_code,</if>
+			<if test="basicUnit != null and basicUnit != '' ">basic_unit,</if>
+			<if test="specifications != null and specifications != '' ">specifications,</if>
+			<if test="costAccountingMethod != null and costAccountingMethod != '' ">cost_accounting_method,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="commodityOrigin != null and commodityOrigin != '' ">commodity_origin,</if>
+			<if test="cargoPosition != null and cargoPosition != '' ">cargo_position,</if>
+			<if test="createTime != null and createTime != '' ">create_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+			<if test="fileId != null and fileId != '' ">file_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="parentId != null and parentId != ''">#{parentId},</if>
+			<if test="commodityName != null and commodityName != ''">#{commodityName},</if>
+			<if test="commodityAbbreviation != null and commodityAbbreviation != ''">#{commodityAbbreviation},</if>
+			<if test="commodityCode != null and commodityCode != ''">#{commodityCode},</if>
+			<if test="commodityNature != null and commodityNature != ''">#{commodityNature},</if>
+			<if test="commodityGoods != null and commodityGoods != ''">#{commodityGoods},</if>
+			<if test="barCode != null and barCode != ''">#{barCode},</if>
+			<if test="basicUnit != null and basicUnit != ''">#{basicUnit},</if>
+			<if test="specifications != null and specifications != ''">#{specifications},</if>
+			<if test="costAccountingMethod != null and costAccountingMethod != ''">#{costAccountingMethod},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="commodityOrigin != null and commodityOrigin != ''">#{commodityOrigin},</if>
+			<if test="cargoPosition != null and cargoPosition != ''">#{cargoPosition},</if>
+			<if test="createTime != null and createTime != ''">#{createTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+			<if test="fileId != null and fileId != ''">#{fileId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCommodityBase" parameterType="CommodityBase">
+        update ess_commodity_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  and parentId != ''  ">parent_id = #{parentId},</if>
+            <if test="commodityName != null  and commodityName != ''  ">commodity_name = #{commodityName},</if>
+            <if test="commodityAbbreviation != null  and commodityAbbreviation != ''  ">commodity_abbreviation = #{commodityAbbreviation},</if>
+            <if test="commodityCode != null  and commodityCode != ''  ">commodity_code = #{commodityCode},</if>
+            <if test="commodityNature != null  and commodityNature != ''  ">commodity_nature = #{commodityNature},</if>
+            <if test="commodityGoods != null  and commodityGoods != ''  ">commodity_goods = #{commodityGoods},</if>
+            <if test="barCode != null  and barCode != ''  ">bar_code = #{barCode},</if>
+            <if test="basicUnit != null  and basicUnit != ''  ">basic_unit = #{basicUnit},</if>
+            <if test="specifications != null  and specifications != ''  ">specifications = #{specifications},</if>
+            <if test="costAccountingMethod != null  and costAccountingMethod != ''  ">cost_accounting_method = #{costAccountingMethod},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="commodityOrigin != null  and commodityOrigin != ''  ">commodity_origin = #{commodityOrigin},</if>
+            <if test="cargoPosition != null  and cargoPosition != ''  ">cargo_position = #{cargoPosition},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="fileId != null  and fileId != ''  ">file_id = #{fileId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCommodityBaseById" parameterType="Integer">
+        update ess_commodity_base  set status = -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteCommodityBaseByIds" parameterType="String">
+        update ess_commodity_base  set status = -1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.ReceivePaymentAccountMapper">
+    
+    <resultMap type="ReceivePaymentAccount" id="ReceivePaymentAccountResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="accountTypeId"    column="account_type_id"    />
+        <result property="accountType"    column="account_type"    />
+        <result property="subjectId"    column="subject_id"    />
+        <result property="bankAccountName"    column="bank_account_name"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankAccount"    column="bank_account"    />
+        <result property="currency"    column="currency"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectReceivePaymentAccountVo">
+        select a.id, a.name, a.account_type_id, a.account_type, a.subject_id, 
+        a.bank_account_name, a.bank_name, a.bank_account, a.currency, a.dept_id, 
+        a.status, a.create_time, a.update_time,s.subject_code,s.subject_name,
+        d.dept_name
+        from ess_receive_payment_account a
+        LEFT JOIN sys_subject s ON a.subject_id=s.id
+        LEFT JOIN sys_dept d ON a.dept_id=d.dept_id
+    </sql>
+	
+    <select id="selectReceivePaymentAccountList" parameterType="com.bangdao.requestVo.essentialInfo.ReceivePaymentAccountRequest"
+            resultMap="ReceivePaymentAccountResult">
+        <include refid="selectReceivePaymentAccountVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and a.id = #{id}</if>
+             <if test="name != null and name != ''"> and a.name = #{name}</if>
+             <if test="accountTypeId != null and accountTypeId != ''"> and a.account_type_id = #{accountTypeId}</if>
+             <if test="accountType != null and accountType != ''"> and a.account_type = #{accountType}</if>
+             <if test="subjectId != null and subjectId != ''"> and a.subject_id = #{subjectId}</if>
+             <if test="bankAccountName != null and bankAccountName != ''"> and a.bank_account_name = #{bankAccountName}</if>
+             <if test="bankName != null and bankName != ''"> and a.bank_name = #{bankName}</if>
+             <if test="bankAccount != null and bankAccount != ''"> and a.bank_account = #{bankAccount}</if>
+             <if test="currency != null and currency != ''"> and a.currency = #{currency}</if>
+             <if test="deptId != null and deptId != ''"> and a.dept_id = #{deptId}</if>
+             <if test="createTime != null and createTime != ''"> and a.create_time = #{createTime}</if>
+             <if test="updateTime != null and updateTime != ''"> and a.update_time = #{updateTime}</if>
+             and a.status = 1
+         </where>
+    </select>
+    
+    <select id="selectReceivePaymentAccountById" parameterType="Integer" resultMap="ReceivePaymentAccountResult">
+        <include refid="selectReceivePaymentAccountVo"/>
+        where a.id = #{id} and a.status = 1
+    </select>
+
+    <insert id="insertReceivePaymentAccount" parameterType="ReceivePaymentAccount">
+        insert into ess_receive_payment_account
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != '' ">name,</if>
+			<if test="accountTypeId != null and accountTypeId != '' ">account_type_id,</if>
+			<if test="accountType != null and accountType != '' ">account_type,</if>
+			<if test="subjectId != null and subjectId != '' ">subject_id,</if>
+			<if test="bankAccountName != null and bankAccountName != '' ">bank_account_name,</if>
+			<if test="bankName != null and bankName != '' ">bank_name,</if>
+			<if test="bankAccount != null and bankAccount != '' ">bank_account,</if>
+			<if test="currency != null and currency != '' ">currency,</if>
+			<if test="deptId != null and deptId != '' ">dept_id,</if>
+			status,
+			create_time,
+			<if test="updateTime != null and updateTime != '' ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null and name != ''">#{name},</if>
+			<if test="accountTypeId != null and accountTypeId != ''">#{accountTypeId},</if>
+			<if test="accountType != null and accountType != ''">#{accountType},</if>
+			<if test="subjectId != null and subjectId != ''">#{subjectId},</if>
+			<if test="bankAccountName != null and bankAccountName != ''">#{bankAccountName},</if>
+			<if test="bankName != null and bankName != ''">#{bankName},</if>
+			<if test="bankAccount != null and bankAccount != ''">#{bankAccount},</if>
+			<if test="currency != null and currency != ''">#{currency},</if>
+			<if test="deptId != null and deptId != ''">#{deptId},</if>
+			1,
+			NOW(),
+			<if test="updateTime != null and updateTime != ''">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateReceivePaymentAccount" parameterType="ReceivePaymentAccount">
+        update ess_receive_payment_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="accountTypeId != null  ">account_type_id = #{accountTypeId},</if>
+            <if test="accountType != null  and accountType != ''  ">account_type = #{accountType},</if>
+            <if test="subjectId != null  ">subject_id = #{subjectId},</if>
+            <if test="bankAccountName != null  and bankAccountName != ''  ">bank_account_name = #{bankAccountName},</if>
+            <if test="bankName != null  and bankName != ''  ">bank_name = #{bankName},</if>
+            <if test="bankAccount != null  and bankAccount != ''  ">bank_account = #{bankAccount},</if>
+            <if test="currency != null  and currency != ''  ">currency = #{currency},</if>
+            <if test="deptId != null  ">dept_id = #{deptId},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            update_time = NOW()
+        </trim>
+        where id = #{id} and status = 1
+    </update>
+
+	<delete id="deleteReceivePaymentAccountById" parameterType="Integer">
+        update ess_receive_payment_account set status=-1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteReceivePaymentAccountByIds" parameterType="String">
+         update ess_receive_payment_account set status=-1 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

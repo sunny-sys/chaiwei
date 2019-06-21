@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.ProvincesMapper">
+    
+    <resultMap type="Provinces" id="ProvincesResult">
+        <result property="id"    column="id"    />
+        <result property="provinceid"    column="provinceid"    />
+        <result property="province"    column="province"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+	
+	<sql id="selectProvincesVo">
+        select id, provinceid, province, sort from sys_provinces
+    </sql>
+	
+    <select id="selectProvincesList" parameterType="com.bangdao.requestVo.essentialInfo.ProvincesRequest"
+            resultMap="ProvincesResult">
+        <include refid="selectProvincesVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="provinceid != null and provinceid != ''"> and provinceid = #{provinceid}</if>
+             <if test="province != null and province != ''"> and province = #{province}</if>
+             <if test="sort != null and sort != ''"> and sort = #{sort}</if>
+         </where>
+    </select>
+    
+    <select id="selectProvincesById" parameterType="Integer" resultMap="ProvincesResult">
+        <include refid="selectProvincesVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectProvincesByIds" resultType="com.bangdao.domain.essentialInfo.Provinces">
+        <include refid="selectProvincesVo"/>
+         where id in
+        <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="insertProvinces" parameterType="Provinces">
+        insert into sys_provinces
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="provinceid != null and provinceid != '' ">provinceid,</if>
+			<if test="province != null and province != '' ">province,</if>
+			<if test="sort != null and sort != '' ">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="provinceid != null and provinceid != ''">#{provinceid},</if>
+			<if test="province != null and province != ''">#{province},</if>
+			<if test="sort != null and sort != ''">#{sort},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateProvinces" parameterType="Provinces">
+        update sys_provinces
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceid != null  and provinceid != ''  ">provinceid = #{provinceid},</if>
+            <if test="province != null  and province != ''  ">province = #{province},</if>
+            <if test="sort != null  ">sort = #{sort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteProvincesById" parameterType="Integer">
+        delete from sys_provinces where id = #{id}
+    </delete>
+	
+    <delete id="deleteProvincesByIds" parameterType="String">
+        delete from sys_provinces where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.IntercourseUnitMapper">
+    
+    <resultMap type="IntercourseUnit" id="IntercourseUnitResult">
+        <result property="id"    column="id"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="unitNature"    column="unit_nature"    />
+        <result property="unitCategory"    column="unit_category"    />
+        <result property="department"    column="department"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="county"    column="county"    />
+        <result property="address"    column="address"    />
+        <result property="unitCode"    column="unit_code"    />
+        <result property="salesman"    column="salesman"    />
+        <result property="contacts"    column="contacts"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="phone"    column="phone"    />
+        <result property="fax"    column="fax"    />
+        <result property="affiliatedArea"    column="affiliated_area"    />
+        <result property="postalCode"    column="postal_code"    />
+        <result property="mailBox"    column="mail_box"    />
+        <result property="contactsId"    column="contacts_id"    />
+        <result property="enclosureId"    column="enclosure_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <!--关联查询-->
+    <resultMap type="IntercourseUnitResp" id="RelationResult">
+        <result property="id"    column="id"    />
+        <result property="unitName"    column="unit_name"    />
+        <result property="unitNature"    column="unit_nature"    />
+        <result property="unitCategory"    column="unit_category"    />
+        <result property="department"    column="department"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="county"    column="county"    />
+        <result property="address"    column="address"    />
+        <result property="unitCode"    column="unit_code"    />
+        <result property="salesman"    column="salesman"    />
+        <result property="salesmanName"    column="salesman_name"    />
+        <result property="contacts"    column="contacts"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="phone"    column="phone"    />
+        <result property="fax"    column="fax"    />
+        <result property="affiliatedArea"    column="affiliated_area"    />
+        <result property="postalCode"    column="postal_code"    />
+        <result property="mailBox"    column="mail_box"    />
+        <result property="contactsId"    column="contacts_id"    />
+        <result property="enclosureId"    column="enclosure_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+	<sql id="selectIntercourseUnitVo">
+        select id, unit_name, unit_nature, unit_category, department, province, city, county, address, unit_code, salesman, contacts, contact_number, phone, fax, affiliated_area, postal_code, mail_box, contacts_id, enclosure_id, create_time from ess_intercourse_unit
+    </sql>
+
+
+    <!--关联查询-->
+	<sql id="selectRelationVo">
+        SELECT
+        a.id,
+        a.unit_name,
+        a.unit_nature,
+        a.unit_category,
+        a.department,
+        a.province,
+        a.city,
+        a.county,
+        a.address,
+        a.unit_code,
+        a.salesman,
+        b.name AS salesman_name,
+        a.contacts,
+        a.contact_number,
+        a.phone,
+        a.fax,
+        a.affiliated_area,
+        a.postal_code,
+        a.mail_box,
+        a.contacts_id,
+        a.enclosure_id,
+        a.create_time
+        FROM
+        ess_intercourse_unit a
+        LEFT JOIN ess_employee b ON a.salesman = b.id AND b.status = 1
+    </sql>
+
+    <select id="selectIntercourseUnitList" parameterType="com.bangdao.requestVo.essentialInfo.IntercourseUnitRequest"
+            resultMap="IntercourseUnitResult">
+        <include refid="selectIntercourseUnitVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="unitName != null and unitName != ''"> and unit_name = #{unitName}</if>
+             <if test="unitNature != null and unitNature != ''"> and unit_nature = #{unitNature}</if>
+             <if test="unitCategory != null and unitCategory != ''"> and unit_category = #{unitCategory}</if>
+             <if test="department != null and department != ''"> and department = #{department}</if>
+             <if test="province != null and province != ''"> and province = #{province}</if>
+             <if test="city != null and city != ''"> and city = #{city}</if>
+             <if test="county != null and county != ''"> and county = #{county}</if>
+             <if test="address != null and address != ''"> and address = #{address}</if>
+             <if test="unitCode != null and unitCode != ''"> and unit_code = #{unitCode}</if>
+             <if test="salesman != null and salesman != ''"> and salesman = #{salesman}</if>
+             <if test="contacts != null and contacts != ''"> and contacts = #{contacts}</if>
+             <if test="contactNumber != null and contactNumber != ''"> and contact_number = #{contactNumber}</if>
+             <if test="phone != null and phone != ''"> and phone = #{phone}</if>
+             <if test="fax != null and fax != ''"> and fax = #{fax}</if>
+             <if test="affiliatedArea != null and affiliatedArea != ''"> and affiliated_area = #{affiliatedArea}</if>
+             <if test="postalCode != null and postalCode != ''"> and postal_code = #{postalCode}</if>
+             <if test="mailBox != null and mailBox != ''"> and mail_box = #{mailBox}</if>
+             <if test="contactsId != null and contactsId != ''"> and contacts_id = #{contactsId}</if>
+             <if test="enclosureId != null and enclosureId != ''"> and enclosure_id = #{enclosureId}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
+         </where>
+    </select>
+
+
+    <!--关联查询-->
+    <select id="selectRelationList" parameterType="com.bangdao.requestVo.essentialInfo.IntercourseUnitRequest"
+            resultMap="RelationResult">
+        <include refid="selectRelationVo"/>
+        <where>
+            <if test="id != null and id != ''"> and a.id = #{id}</if>
+             <if test="unitName != null and unitName != ''"> and a.unit_name like concat(concat('%',#{unitName}),'%')</if>
+             <if test="unitNature != null and unitNature != ''"> and a.unit_nature = #{unitNature}</if>
+             <if test="unitCategory != null and unitCategory != ''"> and a.unit_category = #{unitCategory}</if>
+             <if test="department != null and department != ''"> and a.department = #{department}</if>
+             <if test="province != null and province != ''"> and a.province = #{province}</if>
+             <if test="city != null and city != ''"> and a.city = #{city}</if>
+             <if test="county != null and county != ''"> and a.county = #{county}</if>
+             <if test="address != null and address != ''"> and a.address = #{address}</if>
+             <if test="unitCode != null and unitCode != ''"> and a.unit_code = #{unitCode}</if>
+             <if test="salesman != null and salesman != ''"> and a.salesman = #{salesman}</if>
+             <if test="contacts != null and contacts != ''"> and a.contacts = #{contacts}</if>
+             <if test="contactNumber != null and contactNumber != ''"> and a.contact_number = #{contactNumber}</if>
+             <if test="phone != null and phone != ''"> and a.phone = #{phone}</if>
+             <if test="fax != null and fax != ''"> and a.fax = #{fax}</if>
+             <if test="affiliatedArea != null and affiliatedArea != ''"> and a.affiliated_area = #{affiliatedArea}</if>
+             <if test="postalCode != null and postalCode != ''"> and a.postal_code = #{postalCode}</if>
+             <if test="mailBox != null and mailBox != ''"> and a.mail_box = #{mailBox}</if>
+             <if test="contactsId != null and contactsId != ''"> and a.contacts_id = #{contactsId}</if>
+             <if test="enclosureId != null and enclosureId != ''"> and a.enclosure_id = #{enclosureId}</if>
+             <if test="createTime != null and createTime != ''"> and a.create_time = #{createTime}</if>
+             <if test="status != null and status != ''"> and a.status = #{status}</if>
+         </where>
+    </select>
+
+    <select id="selectIntercourseUnitById" parameterType="Integer" resultMap="IntercourseUnitResult">
+        <include refid="selectIntercourseUnitVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertIntercourseUnit" parameterType="IntercourseUnit">
+        insert into ess_intercourse_unit
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="unitName != null and unitName != '' ">unit_name,</if>
+			<if test="unitNature != null and unitNature != '' ">unit_nature,</if>
+			<if test="unitCategory != null and unitCategory != '' ">unit_category,</if>
+			<if test="department != null and department != '' ">department,</if>
+			<if test="province != null and province != '' ">province,</if>
+			<if test="city != null and city != '' ">city,</if>
+			<if test="county != null and county != '' ">county,</if>
+			<if test="address != null and address != '' ">address,</if>
+			<if test="unitCode != null and unitCode != '' ">unit_code,</if>
+			<if test="salesman != null and salesman != '' ">salesman,</if>
+			<if test="contacts != null and contacts != '' ">contacts,</if>
+			<if test="contactNumber != null and contactNumber != '' ">contact_number,</if>
+			<if test="phone != null and phone != '' ">phone,</if>
+			<if test="fax != null and fax != '' ">fax,</if>
+			<if test="affiliatedArea != null and affiliatedArea != '' ">affiliated_area,</if>
+			<if test="postalCode != null and postalCode != '' ">postal_code,</if>
+			<if test="mailBox != null and mailBox != '' ">mail_box,</if>
+			<if test="contactsId != null and contactsId != '' ">contacts_id,</if>
+			<if test="enclosureId != null and enclosureId != '' ">enclosure_id,</if>
+			<if test="createTime != null and createTime != '' ">create_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="unitName != null and unitName != ''">#{unitName},</if>
+			<if test="unitNature != null and unitNature != ''">#{unitNature},</if>
+			<if test="unitCategory != null and unitCategory != ''">#{unitCategory},</if>
+			<if test="department != null and department != ''">#{department},</if>
+			<if test="province != null and province != ''">#{province},</if>
+			<if test="city != null and city != ''">#{city},</if>
+			<if test="county != null and county != ''">#{county},</if>
+			<if test="address != null and address != ''">#{address},</if>
+			<if test="unitCode != null and unitCode != ''">#{unitCode},</if>
+			<if test="salesman != null and salesman != ''">#{salesman},</if>
+			<if test="contacts != null and contacts != ''">#{contacts},</if>
+			<if test="contactNumber != null and contactNumber != ''">#{contactNumber},</if>
+			<if test="phone != null and phone != ''">#{phone},</if>
+			<if test="fax != null and fax != ''">#{fax},</if>
+			<if test="affiliatedArea != null and affiliatedArea != ''">#{affiliatedArea},</if>
+			<if test="postalCode != null and postalCode != ''">#{postalCode},</if>
+			<if test="mailBox != null and mailBox != ''">#{mailBox},</if>
+			<if test="contactsId != null and contactsId != ''">#{contactsId},</if>
+			<if test="enclosureId != null and enclosureId != ''">#{enclosureId},</if>
+			<if test="createTime != null and createTime != ''">#{createTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateIntercourseUnit" parameterType="IntercourseUnit">
+        update ess_intercourse_unit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unitName != null  and unitName != ''  ">unit_name = #{unitName},</if>
+            <if test="unitNature != null  and unitNature != ''  ">unit_nature = #{unitNature},</if>
+            <if test="unitCategory != null  and unitCategory != ''  ">unit_category = #{unitCategory},</if>
+            <if test="department != null  and department != ''  ">department = #{department},</if>
+            <if test="province != null  and province != ''  ">province = #{province},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="county != null  and county != ''  ">county = #{county},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="unitCode != null  and unitCode != ''  ">unit_code = #{unitCode},</if>
+            <if test="salesman != null  and salesman != ''  ">salesman = #{salesman},</if>
+            <if test="contacts != null  and contacts != ''  ">contacts = #{contacts},</if>
+            <if test="contactNumber != null  and contactNumber != ''  ">contact_number = #{contactNumber},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="fax != null  and fax != ''  ">fax = #{fax},</if>
+            <if test="affiliatedArea != null  and affiliatedArea != ''  ">affiliated_area = #{affiliatedArea},</if>
+            <if test="postalCode != null  and postalCode != ''  ">postal_code = #{postalCode},</if>
+            <if test="mailBox != null  and mailBox != ''  ">mail_box = #{mailBox},</if>
+            <if test="contactsId != null  and contactsId != ''  ">contacts_id = #{contactsId},</if>
+            <if test="enclosureId != null  and enclosureId != ''  ">enclosure_id = #{enclosureId},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteIntercourseUnitById" parameterType="Integer">
+        update  ess_intercourse_unit set status = -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteIntercourseUnitByIds" parameterType="String">
+        update  ess_intercourse_unit set status = -1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

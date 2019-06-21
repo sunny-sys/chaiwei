@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.SubjectMapper">
+    
+    <resultMap type="Subject" id="SubjectResult">
+        <result property="id"    column="id"    />
+        <result property="subjectCode"    column="subject_code"    />
+        <result property="subjectName"    column="subject_name"    />
+        <result property="parentSubjectCode"    column="parent_subject_code"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="standardSubject"    column="standard_subject"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+	
+	<sql id="selectSubjectVo">
+        select id, subject_code, subject_name, parent_subject_code, create_time, update_time, standard_subject, status from sys_subject
+    </sql>
+	
+    <select id="selectSubjectList" parameterType="com.bangdao.requestVo.essentialInfo.SubjectRequest"
+            resultMap="SubjectResult">
+        <include refid="selectSubjectVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="subjectCode != null and subjectCode != ''"> and subject_code = #{subjectCode}</if>
+             <if test="subjectName != null and subjectName != ''"> and subject_name = #{subjectName}</if>
+             <if test="parentSubjectCode != null and parentSubjectCode != ''"> and parent_subject_code = #{parentSubjectCode}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime}</if>
+             <if test="standardSubject != null and standardSubject != ''"> and standard_subject = #{standardSubject}</if>
+             and status = 1
+         </where>
+    </select>
+    
+    <select id="selectSubjectToAccount" parameterType="com.bangdao.requestVo.essentialInfo.SubjectRequest"
+            resultMap="SubjectResult">
+        <include refid="selectSubjectVo"/>
+        <where>  
+             parent_subject_code in(1001,1002)
+             and status = 1
+         </where>
+    </select>
+    
+    <select id="selectSubjectById" parameterType="Integer" resultMap="SubjectResult">
+        <include refid="selectSubjectVo"/>
+        where id = #{id} and status = 1
+    </select>
+
+    <insert id="insertSubject" parameterType="Subject">
+        insert into sys_subject
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="subjectCode != null and subjectCode != '' ">subject_code,</if>
+			<if test="subjectName != null and subjectName != '' ">subject_name,</if>
+			<if test="parentSubjectCode != null and parentSubjectCode != '' ">parent_subject_code,</if>
+			create_time,
+			standard_subject,
+			status,
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="subjectCode != null and subjectCode != ''">#{subjectCode},</if>
+			<if test="subjectName != null and subjectName != ''">#{subjectName},</if>
+			<if test="parentSubjectCode != null and parentSubjectCode != ''">#{parentSubjectCode},</if>
+			NOW(),
+			0,
+			1
+         </trim>
+    </insert>
+	 
+    <update id="updateSubject" parameterType="Subject">
+        update sys_subject
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subjectCode != null  and subjectCode != ''  ">subject_code = #{subjectCode},</if>
+            <if test="subjectName != null  and subjectName != ''  ">subject_name = #{subjectName},</if>
+            <if test="parentSubjectCode != null  and parentSubjectCode != ''  ">parent_subject_code = #{parentSubjectCode},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            update_time = NOW(),
+            <if test="standardSubject != null  ">standard_subject = #{standardSubject},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id} and status = 1
+    </update>
+
+	<delete id="deleteSubjectById" parameterType="Integer">
+        update sys_subject set status=-1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteSubjectByIds" parameterType="String">
+        update sys_subject set status=-1 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

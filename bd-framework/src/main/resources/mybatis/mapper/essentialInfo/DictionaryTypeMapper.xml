@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.DictionaryTypeMapper">
+    
+    <resultMap type="DictionaryType" id="DictionaryTypeResult">
+        <result property="id"    column="id"    />
+        <result property="dicName"    column="dic_name"    />
+        <result property="dicType"    column="dic_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="dicNameSpell"    column="dic_name_spell"    />
+    </resultMap>
+	
+	<sql id="selectDictionaryTypeVo">
+        select id, dic_name, dic_type, remark, create_time, dic_name_spell from sys_dictionary_type
+    </sql>
+	
+    <select id="selectDictionaryTypeList" parameterType="com.bangdao.requestVo.essentialInfo.DictionaryTypeRequest"
+            resultMap="DictionaryTypeResult">
+        <include refid="selectDictionaryTypeVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="dicName != null and dicName != ''"> and dic_name = #{dicName}</if>
+             <if test="dicType != null and dicType != ''"> and dic_type = #{dicType}</if>
+             <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="dicNameSpell != null and dicNameSpell != ''"> and dic_name_spell = #{dicNameSpell}</if>
+         </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectDictionaryTypeById" parameterType="Integer" resultMap="DictionaryTypeResult">
+        <include refid="selectDictionaryTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectDictionaryByDicName" resultType="com.bangdao.domain.essentialInfo.DictionaryType" parameterType="string">
+        <include refid="selectDictionaryTypeVo"/>
+        where dic_name = #{dicName}
+    </select>
+
+    <select id="selectDictionaryByDicType" resultType="com.bangdao.domain.essentialInfo.DictionaryType" parameterType="string">
+        <include refid="selectDictionaryTypeVo"/>
+        where dic_type = #{dicType}
+    </select>
+
+    <select id="selectDictionaryTypeByIds" resultType="com.bangdao.domain.essentialInfo.DictionaryType" parameterType="String">
+        <include refid="selectDictionaryTypeVo"/>
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insertDictionaryType" parameterType="DictionaryType">
+        insert into sys_dictionary_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="dicName != null and dicName != '' ">dic_name,</if>
+			<if test="dicType != null and dicType != '' ">dic_type,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="createTime != null and createTime != '' ">create_time,</if>
+			<if test="dicNameSpell != null and dicNameSpell != '' ">dic_name_spell,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="dicName != null and dicName != ''">#{dicName},</if>
+			<if test="dicType != null and dicType != ''">#{dicType},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="createTime != null and createTime != ''">#{createTime},</if>
+			<if test="dicNameSpell != null and dicNameSpell != ''">#{dicNameSpell},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateDictionaryType" parameterType="DictionaryType">
+        update sys_dictionary_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dicName != null  and dicName != ''  ">dic_name = #{dicName},</if>
+            <if test="dicType != null  and dicType != ''  ">dic_type = #{dicType},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="dicNameSpell != null  and dicNameSpell != ''  ">dic_name_spell = #{dicNameSpell},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteDictionaryTypeById" parameterType="Integer">
+        delete from sys_dictionary_type where id = #{id}
+    </delete>
+	
+    <delete id="deleteDictionaryTypeByIds" parameterType="String">
+        delete from sys_dictionary_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

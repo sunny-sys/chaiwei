@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.CategoryMapper">
+    
+    <resultMap type="Category" id="CategoryResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="commodityCategoryName"    column="commodity_category_name"    />
+        <result property="commodityCategoryCode"    column="commodity_category_code"    />
+        <result property="pinyinCode"    column="pinyin_code"    />
+        <result property="sort"    column="sort"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="category"    column="category"    />
+    </resultMap>
+	
+	<sql id="selectCategoryVo">
+        select id, parent_id, commodity_category_name, commodity_category_code, pinyin_code, sort, remark, create_by, create_time, update_by, update_time, status, category from sys_category
+    </sql>
+	
+    <select id="selectCategoryList" parameterType="com.bangdao.requestVo.essentialInfo.CategoryRequest"
+            resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="parentId != null and parentId != ''"> and parent_id = #{parentId}</if>
+             <if test="commodityCategoryName != null and commodityCategoryName != ''"> and commodity_category_name = #{commodityCategoryName}</if>
+             <if test="commodityCategoryCode != null and commodityCategoryCode != ''"> and commodity_category_code = #{commodityCategoryCode}</if>
+             <if test="pinyinCode != null and pinyinCode != ''"> and pinyin_code = #{pinyinCode}</if>
+             <if test="sort != null and sort != ''"> and sort = #{sort}</if>
+             <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+             <if test="createBy != null and createBy != ''"> and create_by = #{createBy}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy}</if>
+             <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
+             <if test="category != null and category != ''"> and category = #{category}</if>
+         </where>
+          order by sort
+    </select>
+    
+    <select id="selectCategoryById" parameterType="Integer" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCategory" parameterType="Category">
+        insert into sys_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="parentId != null and parentId != '' ">parent_id,</if>
+			<if test="commodityCategoryName != null and commodityCategoryName != '' ">commodity_category_name,</if>
+			<if test="commodityCategoryCode != null and commodityCategoryCode != '' ">commodity_category_code,</if>
+			<if test="pinyinCode != null and pinyinCode != '' ">pinyin_code,</if>
+			<if test="sort != null and sort != '' ">sort,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="createBy != null and createBy != '' ">create_by,</if>
+			<if test="createTime != null and createTime != '' ">create_time,</if>
+			<if test="updateBy != null and updateBy != '' ">update_by,</if>
+			<if test="updateTime != null and updateTime != '' ">update_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+			<if test="category != null and category != '' ">category,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="parentId != null and parentId != ''">#{parentId},</if>
+			<if test="commodityCategoryName != null and commodityCategoryName != ''">#{commodityCategoryName},</if>
+			<if test="commodityCategoryCode != null and commodityCategoryCode != ''">#{commodityCategoryCode},</if>
+			<if test="pinyinCode != null and pinyinCode != ''">#{pinyinCode},</if>
+			<if test="sort != null and sort != ''">#{sort},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="createTime != null and createTime != ''">#{createTime},</if>
+			<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+			<if test="updateTime != null and updateTime != ''">#{updateTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+			<if test="category != null and category != ''">#{category},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCategory" parameterType="Category">
+        update sys_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  and parentId != ''  ">parent_id = #{parentId},</if>
+            <if test="commodityCategoryName != null  and commodityCategoryName != ''  ">commodity_category_name = #{commodityCategoryName},</if>
+            <if test="commodityCategoryCode != null  and commodityCategoryCode != ''  ">commodity_category_code = #{commodityCategoryCode},</if>
+            <if test="pinyinCode != null  and pinyinCode != ''  ">pinyin_code = #{pinyinCode},</if>
+            <if test="sort != null  and sort != ''  ">sort = #{sort},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="category != null  and category != ''  ">category = #{category},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCategoryById" parameterType="Integer">
+        update  sys_category set status = -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteCategoryByIds" parameterType="String">
+        update  sys_category set status = -1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

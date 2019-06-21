@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.essentialInfo.EmployeeMapper">
+    
+    <resultMap type="Employee" id="EmployeeResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="name"    column="name"    />
+        <result property="personnelNumber"    column="personnel_number"    />
+        <result property="sex"    column="sex"    />
+        <result property="dateOfBirth"    column="date_of_birth"    />
+        <result property="nativePlace"    column="native_place"    />
+        <result property="subordinateDepartmentId"    column="subordinate_department_id"    />
+        <result property="post"    column="post"    />
+        <result property="phoneNumber"    column="phone_number"    />
+        <result property="homePhone"    column="home_phone"    />
+        <result property="otherPhone"    column="other_phone"    />
+        <result property="postalCode"    column="postal_code"    />
+        <result property="presentAddress"    column="present_address"    />
+        <result property="homeAddress"    column="home_address"    />
+        <result property="politicalOutlook"    column="political_outlook"    />
+        <result property="degreeOfEducation"    column="degree_of_education"    />
+        <result property="timeOfEntry"    column="time_of_entry"    />
+        <result property="maritalStatus"    column="marital_status"    />
+        <result property="graduateSchool"    column="graduate_school"    />
+        <result property="employeeStatus"    column="employee_status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+	
+	<sql id="selectEmployeeVo">
+        select id, parent_id, id_card, name, personnel_number, sex, date_of_birth, native_place, subordinate_department_id, post, phone_number, home_phone, other_phone, postal_code, present_address, home_address, political_outlook, degree_of_education, time_of_entry, marital_status, graduate_school, employee_status, remark, create_by, create_time, update_by, update_time, status from ess_employee
+    </sql>
+	
+    <select id="selectEmployeeList" parameterType="com.bangdao.requestVo.essentialInfo.EmployeeRequest"
+            resultMap="EmployeeResult">
+        <include refid="selectEmployeeVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="parentId != null and parentId != ''"> and parent_id = #{parentId}</if>
+             <if test="idCard != null and idCard != ''"> and id_card = #{idCard}</if>
+             <if test="name != null and name != ''"> and name like concat(concat('%',#{name}),'%')</if>
+             <if test="personnelNumber != null and personnelNumber != ''"> and personnel_number = #{personnelNumber}</if>
+             <if test="sex != null and sex != ''"> and sex = #{sex}</if>
+             <if test="dateOfBirth != null"> and date_of_birth = #{dateOfBirth}</if>
+             <if test="nativePlace != null and nativePlace != ''"> and native_place = #{nativePlace}</if>
+             <if test="subordinateDepartmentId != null and subordinateDepartmentId != ''"> and subordinate_department_id = #{subordinateDepartmentId}</if>
+             <if test="post != null and post != ''"> and post = #{post}</if>
+             <if test="phoneNumber != null and phoneNumber != ''"> and phone_number = #{phoneNumber}</if>
+             <if test="homePhone != null and homePhone != ''"> and home_phone = #{homePhone}</if>
+             <if test="otherPhone != null and otherPhone != ''"> and other_phone = #{otherPhone}</if>
+             <if test="postalCode != null and postalCode != ''"> and postal_code = #{postalCode}</if>
+             <if test="presentAddress != null and presentAddress != ''"> and present_address = #{presentAddress}</if>
+             <if test="homeAddress != null and homeAddress != ''"> and home_address = #{homeAddress}</if>
+             <if test="politicalOutlook != null and politicalOutlook != ''"> and political_outlook = #{politicalOutlook}</if>
+             <if test="degreeOfEducation != null and degreeOfEducation != ''"> and degree_of_education = #{degreeOfEducation}</if>
+             <if test="timeOfEntry != null"> and time_of_entry = #{timeOfEntry}</if>
+             <if test="maritalStatus != null and maritalStatus != ''"> and marital_status = #{maritalStatus}</if>
+             <if test="graduateSchool != null and graduateSchool != ''"> and graduate_school = #{graduateSchool}</if>
+             <if test="employeeStatus != null and employeeStatus != ''"> and employee_status = #{employeeStatus}</if>
+             <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+             <if test="createBy != null and createBy != ''"> and create_by = #{createBy}</if>
+             <if test="createTime != null"> and create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy}</if>
+             <if test="updateTime != null"> and update_time = #{updateTime}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
+         </where>
+    </select>
+    
+    <select id="selectEmployeeById" parameterType="Integer" resultMap="EmployeeResult">
+        <include refid="selectEmployeeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEmployee" parameterType="Employee">
+        insert into ess_employee
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="parentId != null and parentId != '' ">parent_id,</if>
+			<if test="idCard != null and idCard != '' ">id_card,</if>
+			<if test="name != null and name != '' ">name,</if>
+			<if test="personnelNumber != null and personnelNumber != '' ">personnel_number,</if>
+			<if test="sex != null and sex != '' ">sex,</if>
+			<if test="dateOfBirth != null">date_of_birth,</if>
+			<if test="nativePlace != null and nativePlace != '' ">native_place,</if>
+			<if test="subordinateDepartmentId != null and subordinateDepartmentId != '' ">subordinate_department_id,</if>
+			<if test="post != null and post != '' ">post,</if>
+			<if test="phoneNumber != null and phoneNumber != '' ">phone_number,</if>
+			<if test="homePhone != null and homePhone != '' ">home_phone,</if>
+			<if test="otherPhone != null and otherPhone != '' ">other_phone,</if>
+			<if test="postalCode != null and postalCode != '' ">postal_code,</if>
+			<if test="presentAddress != null and presentAddress != '' ">present_address,</if>
+			<if test="homeAddress != null and homeAddress != '' ">home_address,</if>
+			<if test="politicalOutlook != null and politicalOutlook != '' ">political_outlook,</if>
+			<if test="degreeOfEducation != null and degreeOfEducation != '' ">degree_of_education,</if>
+			<if test="timeOfEntry != null">time_of_entry,</if>
+			<if test="maritalStatus != null and maritalStatus != '' ">marital_status,</if>
+			<if test="graduateSchool != null and graduateSchool != '' ">graduate_school,</if>
+			<if test="employeeStatus != null and employeeStatus != '' ">employee_status,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="createBy != null and createBy != '' ">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null and updateBy != '' ">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="parentId != null and parentId != ''">#{parentId},</if>
+			<if test="idCard != null and idCard != ''">#{idCard},</if>
+			<if test="name != null and name != ''">#{name},</if>
+			<if test="personnelNumber != null and personnelNumber != ''">#{personnelNumber},</if>
+			<if test="sex != null and sex != ''">#{sex},</if>
+			<if test="dateOfBirth != null">#{dateOfBirth},</if>
+			<if test="nativePlace != null and nativePlace != ''">#{nativePlace},</if>
+			<if test="subordinateDepartmentId != null and subordinateDepartmentId != ''">#{subordinateDepartmentId},</if>
+			<if test="post != null and post != ''">#{post},</if>
+			<if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber},</if>
+			<if test="homePhone != null and homePhone != ''">#{homePhone},</if>
+			<if test="otherPhone != null and otherPhone != ''">#{otherPhone},</if>
+			<if test="postalCode != null and postalCode != ''">#{postalCode},</if>
+			<if test="presentAddress != null and presentAddress != ''">#{presentAddress},</if>
+			<if test="homeAddress != null and homeAddress != ''">#{homeAddress},</if>
+			<if test="politicalOutlook != null and politicalOutlook != ''">#{politicalOutlook},</if>
+			<if test="degreeOfEducation != null and degreeOfEducation != ''">#{degreeOfEducation},</if>
+			<if test="timeOfEntry != null">#{timeOfEntry},</if>
+			<if test="maritalStatus != null and maritalStatus != ''">#{maritalStatus},</if>
+			<if test="graduateSchool != null and graduateSchool != ''">#{graduateSchool},</if>
+			<if test="employeeStatus != null and employeeStatus != ''">#{employeeStatus},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateEmployee" parameterType="Employee">
+        update ess_employee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  and parentId != ''  ">parent_id = #{parentId},</if>
+            <if test="idCard != null  and idCard != ''  ">id_card = #{idCard},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="personnelNumber != null  and personnelNumber != ''  ">personnel_number = #{personnelNumber},</if>
+            <if test="sex != null  and sex != ''  ">sex = #{sex},</if>
+            <if test="dateOfBirth != null  ">date_of_birth = #{dateOfBirth},</if>
+            <if test="nativePlace != null  and nativePlace != ''  ">native_place = #{nativePlace},</if>
+            <if test="subordinateDepartmentId != null  and subordinateDepartmentId != ''  ">subordinate_department_id = #{subordinateDepartmentId},</if>
+            <if test="post != null  and post != ''  ">post = #{post},</if>
+            <if test="phoneNumber != null  and phoneNumber != ''  ">phone_number = #{phoneNumber},</if>
+            <if test="homePhone != null  and homePhone != ''  ">home_phone = #{homePhone},</if>
+            <if test="otherPhone != null  and otherPhone != ''  ">other_phone = #{otherPhone},</if>
+            <if test="postalCode != null  and postalCode != ''  ">postal_code = #{postalCode},</if>
+            <if test="presentAddress != null  and presentAddress != ''  ">present_address = #{presentAddress},</if>
+            <if test="homeAddress != null  and homeAddress != ''  ">home_address = #{homeAddress},</if>
+            <if test="politicalOutlook != null  and politicalOutlook != ''  ">political_outlook = #{politicalOutlook},</if>
+            <if test="degreeOfEducation != null  and degreeOfEducation != ''  ">degree_of_education = #{degreeOfEducation},</if>
+            <if test="timeOfEntry != null  ">time_of_entry = #{timeOfEntry},</if>
+            <if test="maritalStatus != null  and maritalStatus != ''  ">marital_status = #{maritalStatus},</if>
+            <if test="graduateSchool != null  and graduateSchool != ''  ">graduate_school = #{graduateSchool},</if>
+            <if test="employeeStatus != null  and employeeStatus != ''  ">employee_status = #{employeeStatus},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteEmployeeById" parameterType="Integer">
+        update ess_employee set status = -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteEmployeeByIds" parameterType="String">
+        update ess_employee set status = -1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

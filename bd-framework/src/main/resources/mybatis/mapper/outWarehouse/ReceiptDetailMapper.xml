@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.outWarehouse.ReceiptDetailMapper">
+    
+    <resultMap type="ReceiptDetail" id="ReceiptDetailResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="sourceId"    column="source_id"    />
+        <result property="source"    column="source"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+	
+	<sql id="selectReceiptDetailVo">
+        select id, parent_id, source_id, source, remark, create_by, create_time, update_by, update_time, status from sal_receipt_detail
+    </sql>
+	
+    <select id="selectReceiptDetailList" parameterType="com.bangdao.requestVo.outWarehouse.ReceiptDetailReq"
+            resultMap="ReceiptDetailResult">
+        <include refid="selectReceiptDetailVo"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="parentId != null and parentId != ''"> and parent_id = #{parentId}</if>
+             <if test="sourceId != null and sourceId != ''"> and source_id = #{sourceId}</if>
+             <if test="source != null and source != ''"> and source = #{source}</if>
+             <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+             <if test="createBy != null and createBy != ''"> and create_by = #{createBy}</if>
+             <if test="createTime != null and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy}</if>
+             <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime}</if>
+             <if test="status != null and status != ''"> and status = #{status}</if>
+         </where>
+    </select>
+    
+    <select id="selectReceiptDetailById" parameterType="Integer" resultMap="ReceiptDetailResult">
+        <include refid="selectReceiptDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertReceiptDetail" parameterType="ReceiptDetail">
+        insert into sal_receipt_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="parentId != null and parentId != '' ">parent_id,</if>
+			<if test="sourceId != null and sourceId != '' ">source_id,</if>
+			<if test="source != null and source != '' ">source,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="createBy != null and createBy != '' ">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null and updateBy != '' ">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="parentId != null and parentId != ''">#{parentId},</if>
+			<if test="sourceId != null and sourceId != ''">#{sourceId},</if>
+			<if test="source != null and source != ''">#{source},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+
+    <insert id="batchInsertOrUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            insert into sal_receipt_detail
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.id != null and item.id != '' ">id,</if>
+                <if test="item.parentId != null and item.parentId != '' ">parent_id,</if>
+                <if test="item.sourceId != null and item.sourceId != '' ">source_id,</if>
+                <if test="item.source != null and item.source != '' ">source,</if>
+                <if test="item.remark != null and item.remark != '' ">remark,</if>
+                <if test="item.createBy != null and item.createBy != '' ">create_by,</if>
+                <if test="item.createTime != null">create_time,</if>
+                <if test="item.updateBy != null and item.updateBy != '' ">update_by,</if>
+                <if test="item.updateTime != null">update_time,</if>
+                <if test="item.status != null and item.status != '' ">status,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.id != null and item.id != ''">#{item.id},</if>
+                <if test="item.parentId != null and item.parentId != ''">#{item.parentId},</if>
+                <if test="item.sourceId != null and item.sourceId != ''">#{item.sourceId},</if>
+                <if test="item.source != null and item.source != ''">#{item.source},</if>
+                <if test="item.remark != null and item.remark != ''">#{item.remark},</if>
+                <if test="item.createBy != null and item.createBy != ''">#{item.createBy},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateBy != null and item.updateBy != ''">#{item.updateBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.status != null and item.status != ''">#{item.status},</if>
+            </trim>
+            ON DUPLICATE KEY UPDATE
+            <trim  suffixOverrides=",">
+                <if test="item.id != null">id = #{item.id},</if>
+                <if test="item.parentId != null  ">parent_id = #{item.parentId},</if>
+                <if test="item.sourceId != null  ">source_id = #{item.sourceId},</if>
+                <if test="item.source != null  and item.source != ''  ">source = #{item.source},</if>
+                <if test="item.remark != null  and item.remark != ''  ">remark = #{item.remark},</if>
+                <if test="item.createBy != null  and item.createBy != ''  ">create_by = #{item.createBy},</if>
+                <if test="item.createTime != null  ">create_time = #{item.createTime},</if>
+                <if test="item.updateBy != null  and item.updateBy != ''  ">update_by = #{item.updateBy},</if>
+                <if test="item.updateTime != null  ">update_time = #{item.updateTime},</if>
+                <if test="item.status != null  ">status = #{item.status},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="updateReceiptDetail" parameterType="ReceiptDetail">
+        update sal_receipt_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="sourceId != null  ">source_id = #{sourceId},</if>
+            <if test="source != null  and source != ''  ">source = #{source},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteReceiptDetailById" parameterType="Integer">
+        update sal_receipt_detail set status= -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteReceiptDetailByIds" parameterType="String">
+        update sal_receipt_detail set status= -1  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByParentId" parameterType="String">
+        update sal_receipt_detail set status= -1  where parent_id in
+        <foreach item="parentId" collection="array" open="(" separator="," close=")">
+            #{parentId}
+        </foreach>
+    </delete>
+
+</mapper>

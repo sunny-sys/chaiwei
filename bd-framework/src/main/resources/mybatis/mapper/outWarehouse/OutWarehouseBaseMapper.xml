@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bangdao.mapper.outWarehouse.OutWarehouseBaseMapper">
+    
+    <resultMap type="OutWarehouseBase" id="OutWarehouseBaseResult">
+        <result property="id"    column="id"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="handManId"    column="hand_man_id"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="dateDeliver"    column="date_deliver"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="singlePerson"    column="single_person"    />
+        <result property="dateOfProduction"    column="date_of_production"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap type="OutWarehouseBaseResp" id="OutWarehouseBaseRespResult">
+        <result property="id"    column="id"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="handManId"    column="hand_man_id"    />
+        <result property="handManName"    column="hand_man_name"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="dateDeliver"    column="date_deliver"    />
+        <result property="documentNumber"    column="document_number"    />
+        <result property="singlePerson"    column="single_person"    />
+        <result property="dateOfProduction"    column="date_of_production"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="approvalStatus"    column="approval_status"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="submitBy"    column="submit_by"    />
+        <result property="effectiveTime"    column="effective_time"    />
+    </resultMap>
+
+	<sql id="selectOutWarehouseBaseVo">
+        select id, supplier_id, hand_man_id, total_amount, date_deliver, document_number, single_person, date_of_production, remark, create_by, create_time, update_by, update_time, status from sal_out_warehouse_base
+    </sql>
+
+    <!--查询关联信息sql-->
+	<sql id="selectRelationVo">
+        SELECT
+        sal.id,
+        sal.supplier_id,
+        unit.unit_name AS supplier_name,
+        sal.hand_man_id,
+        employee.name AS hand_man_name,
+        sal.total_amount,
+        sal.date_deliver,
+        sal.document_number,
+        sal.single_person,
+        sal.date_of_production,
+        sal.remark,
+        sal.create_by,
+        sal.create_time,
+        sal.update_by,
+        sal.update_time,
+        sal.approval_status,
+        sal.submit_time,
+        sal.submit_by,
+        sal.effective_time
+        FROM
+        sal_out_warehouse_base sal
+    LEFT JOIN ess_intercourse_unit unit ON sal.supplier_id = unit.id
+    AND unit. STATUS = 1
+    LEFT JOIN ess_employee employee ON employee.id = sal.hand_man_id
+    AND employee. STATUS = 1
+    </sql>
+
+    <!--查询关联信息sql-->
+    <select id="selectRelationList" parameterType="com.bangdao.requestVo.outWarehouse.OutWarehouseBaseReq"
+            resultMap="OutWarehouseBaseRespResult">
+        <include refid="selectRelationVo"/>
+        <where>
+            <if test="id != null and id != ''"> and sal.id = #{id}</if>
+             <if test="supplierId != null and supplierId != ''"> and sal.supplier_id = #{supplierId}</if>
+            <if test="supplierName != null and supplierName != ''"> and unit.unit_name like concat(concat('%',#{supplierName}),'%')</if>
+            <if test="handManId != null and handManId != ''"> and sal.hand_man_id = #{handManId}</if>
+            <if test="handManName != null  and handManName != ''"> and employee.name like concat(concat('%',#{handManName}),'%')</if>
+            <if test="totalAmount != null and totalAmount != ''"> and sal.total_amount = #{totalAmount}</if>
+             <if test="dateDeliver != null"> and sal.date_deliver = #{dateDeliver}</if>
+             <if test="documentNumber != null and documentNumber != ''"> and sal.document_number = #{documentNumber}</if>
+             <if test="singlePerson != null and singlePerson != ''"> and sal.single_person = #{singlePerson}</if>
+             <if test="dateOfProduction != null"> and sal.date_of_production = #{dateOfProduction}</if>
+             <if test="remark != null and remark != ''"> and sal.remark = #{remark}</if>
+             <if test="createBy != null and createBy != ''"> and sal.create_by = #{createBy}</if>
+             <if test="createTime != null"> and sal.create_time = #{createTime}</if>
+             <if test="updateBy != null and updateBy != ''"> and sal.update_by = #{updateBy}</if>
+             <if test="updateTime != null"> and sal.update_time = #{updateTime}</if>
+             <if test="status != null and status != ''"> and sal.status = #{status}</if>
+            <if test="approvalStatus != null"> and sal.approval_status = #{approvalStatus} </if>
+            <if test="startDate != null"> and sal.date_of_production &gt;= #{startDate}</if>
+            <if test="endDate != null"> and sal.date_of_production &lt;= #{endDate} </if>
+            <if test="ids != null">
+                <foreach item="id" collection="ids" open=" and sal.id in (" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+         </where>
+    </select>
+
+    <!--查询关联信息sql-->
+    <select id="selectRelationById" parameterType="Integer" resultMap="OutWarehouseBaseRespResult">
+        <include refid="selectRelationVo"/>
+        where sal.id = #{id}
+    </select>
+
+    <select id="selectOutWarehouseBaseList" parameterType="com.bangdao.requestVo.outWarehouse.OutWarehouseBaseReq"
+            resultMap="OutWarehouseBaseResult">
+        <include refid="selectOutWarehouseBaseVo"/>
+        <where>
+            <if test="id != null and id != ''"> and id = #{id}</if>
+            <if test="supplierId != null and supplierId != ''"> and supplier_id = #{supplierId}</if>
+            <if test="handManId != null and handManId != ''"> and hand_man_id = #{handManId}</if>
+            <if test="totalAmount != null and totalAmount != ''"> and total_amount = #{totalAmount}</if>
+            <if test="dateDeliver != null"> and date_deliver = #{dateDeliver}</if>
+            <if test="documentNumber != null and documentNumber != ''"> and document_number = #{documentNumber}</if>
+            <if test="singlePerson != null and singlePerson != ''"> and single_person = #{singlePerson}</if>
+            <if test="dateOfProduction != null"> and date_of_production = #{dateOfProduction}</if>
+            <if test="remark != null and remark != ''"> and remark = #{remark}</if>
+            <if test="createBy != null and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="createTime != null"> and create_time = #{createTime}</if>
+            <if test="updateBy != null and updateBy != ''"> and update_by = #{updateBy}</if>
+            <if test="updateTime != null"> and update_time = #{updateTime}</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectOutWarehouseBaseById" parameterType="Integer" resultMap="OutWarehouseBaseResult">
+        <include refid="selectOutWarehouseBaseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOutWarehouseBase" parameterType="OutWarehouseBase">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into sal_out_warehouse_base
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != '' ">id,</if>
+			<if test="supplierId != null and supplierId != '' ">supplier_id,</if>
+			<if test="handManId != null and handManId != '' ">hand_man_id,</if>
+			<if test="totalAmount != null and totalAmount != '' ">total_amount,</if>
+			<if test="dateDeliver != null">date_deliver,</if>
+			<if test="documentNumber != null and documentNumber != '' ">document_number,</if>
+			<if test="singlePerson != null and singlePerson != '' ">single_person,</if>
+			<if test="dateOfProduction != null">date_of_production,</if>
+			<if test="remark != null and remark != '' ">remark,</if>
+			<if test="createBy != null and createBy != '' ">create_by,</if>
+			<if test="createTime != null">create_time,</if>
+			<if test="updateBy != null and updateBy != '' ">update_by,</if>
+			<if test="updateTime != null">update_time,</if>
+			<if test="status != null and status != '' ">status,</if>
+            <if test="approvalStatus != null ">approval_status,</if>
+            <if test="submitTime != null ">submit_time,</if>
+            <if test="submitBy != null ">submit_by,</if>
+            <if test="effectiveTime != null ">effective_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null and id != ''">#{id},</if>
+			<if test="supplierId != null and supplierId != ''">#{supplierId},</if>
+			<if test="handManId != null and handManId != ''">#{handManId},</if>
+			<if test="totalAmount != null and totalAmount != ''">#{totalAmount},</if>
+			<if test="dateDeliver != null">#{dateDeliver},</if>
+			<if test="documentNumber != null and documentNumber != ''">#{documentNumber},</if>
+			<if test="singlePerson != null and singlePerson != ''">#{singlePerson},</if>
+			<if test="dateOfProduction != null">#{dateOfProduction},</if>
+			<if test="remark != null and remark != ''">#{remark},</if>
+			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="createTime != null">#{createTime},</if>
+			<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+			<if test="updateTime != null">#{updateTime},</if>
+			<if test="status != null and status != ''">#{status},</if>
+            <if test="approvalStatus != null ">#{approvalStatus},</if>
+            <if test="submitTime != null ">#{submitTime},</if>
+            <if test="effectiveTime != null ">#{effectiveTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOutWarehouseBase" parameterType="OutWarehouseBase">
+        update sal_out_warehouse_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supplierId != null  ">supplier_id = #{supplierId},</if>
+            <if test="handManId != null  ">hand_man_id = #{handManId},</if>
+            <if test="totalAmount != null  ">total_amount = #{totalAmount},</if>
+            <if test="dateDeliver != null  ">date_deliver = #{dateDeliver},</if>
+            <if test="documentNumber != null  and documentNumber != ''  ">document_number = #{documentNumber},</if>
+            <if test="singlePerson != null  and singlePerson != ''  ">single_person = #{singlePerson},</if>
+            <if test="dateOfProduction != null  ">date_of_production = #{dateOfProduction},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="approvalStatus != null"> approval_status = #{approvalStatus},</if>
+            <if test="submitTime != null "> submit_time = #{submitTime},</if>
+            <if test="submitBy != null "> submit_by = #{submitBy},</if>
+            <if test="effectiveTime != null ">effective_time = #{effectiveTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteOutWarehouseBaseById" parameterType="Integer">
+        update sal_out_warehouse_base set status= -1 where id = #{id}
+    </delete>
+	
+    <delete id="deleteOutWarehouseBaseByIds" parameterType="String">
+        update sal_out_warehouse_base set status= -1  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
