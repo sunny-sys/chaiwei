@@ -44,11 +44,6 @@ public class Menu extends BaseEntity {
     private String url;
 
     /**
-     * 菜单URL
-     */
-    @ApiModelProperty(value = "文件地址")
-    private String filePath;
-    /**
      * 类型:0目录,1菜单,2按钮
      */
     @ApiModelProperty(value = "类型:0目录,1菜单,2按钮")
@@ -117,14 +112,6 @@ public class Menu extends BaseEntity {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     public String getMenuType() {
